@@ -1,41 +1,44 @@
-//: A UIKit based Playground for presenting user interface
-  
+//
+//  ViewController.swift
+//  wwdc-2019
+//
+//  Created by Dominic Holmes on 3/15/19.
+//  Copyright © 2019 Dominic Holmes. All rights reserved.
+//
+
 import UIKit
-import PlaygroundSupport
-import AVFoundation
+//import AVFoundation
 
-class MeteorViewController : UIViewController {
-    override func loadView() {
-        let view = UIView()
+class ViewController: UIViewController {
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view, typically from a nib.
         view.backgroundColor = .black
-
-        let label = UILabel()
-        label.frame = CGRect(x: 150, y: 200, width: 50, height: 20)
-        label.text = ""
-        label.textColor = .white
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
-        view.addSubview(label)
-        self.view = view
-        
-        let button = UIButton(frame: CGRect(x: 20, y: 20, width: 20, height: 20))
+        let button = UIButton(frame: CGRect(x: 20, y: 100, width: 50, height: 50))
         button.sendActions(for: UIControl.Event.touchUpInside)
         button.addTarget(self, action: #selector(spawnMeteors), for: .touchUpInside)
         button.backgroundColor = UIColor.darkGray
         view.addSubview(button)
     }
-    
+
     func listenVolumeButton(){
         
-        let audioSession = AVAudioSession.sharedInstance()
+        /*let audioSession = AVAudioSession.sharedInstance()
         do {
             try audioSession.setActive(true)
         } catch {
             print("audio session refused to start")
         }
         audioSession.addObserver(self, forKeyPath: "outputVolume",
-                                 options: NSKeyValueObservingOptions.new, context: nil)
+                                 options: NSKeyValueObservingOptions.new, context: nil)*/
     }
-    
+
     @objc func spawnMeteors() {
         listenVolumeButton()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -61,9 +64,9 @@ class MeteorViewController : UIViewController {
             }
         }
     }
-    
-    
-    
+
+
+
     func addMeteor(at origin: CGPoint) {
         let r: CGFloat = 200.0
         let pi = CGFloat.pi
@@ -107,8 +110,7 @@ class MeteorViewController : UIViewController {
         meteor.add(strokeEndAnimation, forKey: "meteorEndAnimation")
         meteor.add(opacityAnimation, forKey: "meteorOpacityAnimation")
     }
+
+
 }
-// Present the view controller in the Live View window
-let vc = MeteorViewController()
-vc.view.frame.size = CGSize(width: 700, height: 400)
-PlaygroundPage.current.liveView = vc
+
