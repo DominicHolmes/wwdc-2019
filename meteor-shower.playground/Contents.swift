@@ -134,18 +134,18 @@ class MeteorViewController : UIViewController {
         strokeStartAnimation.fromValue = -0.5
         strokeStartAnimation.toValue = 0.3
         //strokeStartAnimation.duration = 0.7
-        strokeStartAnimation.duration = 0.7
+        strokeStartAnimation.duration = 1.0
         
         let strokeEndAnimation = CABasicAnimation(
             keyPath: "strokeEnd")
         strokeEndAnimation.fromValue = 0.0
         strokeEndAnimation.toValue = 1.0
-        strokeEndAnimation.duration = 0.7
+        strokeEndAnimation.duration = 1.0
         
         let opacityAnimation = CAKeyframeAnimation(keyPath: "opacity")
         opacityAnimation.values = [0.0, 1.0, 0.0]
         opacityAnimation.keyTimes = [0.0, 0.5, 1.0]
-        opacityAnimation.duration = 1.0
+        opacityAnimation.duration = 1.3
         
         meteor.add(strokeStartAnimation, forKey: "meteorAnimation")
         meteor.add(strokeEndAnimation, forKey: "meteorEndAnimation")
