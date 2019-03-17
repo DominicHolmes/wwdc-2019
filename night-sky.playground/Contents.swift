@@ -4,7 +4,14 @@ import AVFoundation
 
 class MeteorViewController : UIViewController {
     
-    var skyView: UIView?
+    // Gradient layer on base view (no rotation)
+    var skyGradient: CAGradientLayer!
+    
+    // Rotating skybox
+    var skyView: UIView!
+    // Constellation layer inside skyView
+    var constellationLayer: CAEmitterLayer!
+    
     
     override func loadView() {
         let view = UIView()
@@ -23,52 +30,67 @@ class MeteorViewController : UIViewController {
         super.viewWillAppear(animated)
         
         // Add gradient to sky
-        createSkyGradient()
+        skyGradient = createSkyGradient()
+        view.layer.addSublayer(skyGradient)
         
-        skyView = UIView(frame: view.bounds)
-        view.addSubview(skyView!)
+        // Create sky view (for stars etc)
+        skyView = createSkyView()
+        view.addSubview(skyView)
         
-        let emitterLayer = CAEmitterLayer()
+        // Create stars with an emitter layer
+        constellationLayer = createConstellationLayer()
+        skyView.layer.addSublayer(constellationLayer)
+        fadeInConstellationLayer()
         
-        emitterLayer.emitterPosition = CGPoint(x: view.center.x, y: view.center.y)
-        emitterLayer.emitterShape = .rectangle
-        emitterLayer.emitterSize = CGSize(width: view.frame.size.width * 2, height: view.frame.size.height * 2)
-        emitterLayer.allowsGroupOpacity
+        // Begin skybox rotation
+        rotateStars()
         
-        let cell = CAEmitterCell()
-        print("2")
-        //cell.lifetime = Float.greatestFiniteMagnitude
-        cell.lifetime = 2000.0
-        cell.velocity = 0
-        cell.scale = 0.1
-        cell.scaleRange = 0.09
-        cell.contents = UIImage(named: "star-circle.png")!.cgImage
-        cell.birthRate = 1
-        /*DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-         emitterLayer.birthRate = 0
-         print("1")
-         }*/
         
-        emitterLayer.emitterCells = [cell]
-        
-        skyView?.layer.addSublayer(emitterLayer)
-        
+        // Button for testing
         let button = UIButton(frame: CGRect(x: 20, y: 20, width: 20, height: 20))
         button.sendActions(for: UIControl.Event.touchUpInside)
         button.addTarget(self, action: #selector(rotateStars), for: .touchUpInside)
         button.backgroundColor = UIColor.darkGray
-        skyView!.addSubview(button)
-        
+        skyView.addSubview(button)
     }
     
-    func createSkyGradient() {
-        
+    func createSkyView() -> UIView {
+        return UIView(frame: view.bounds)
+    }
+    
+    func createSkyGradient() -> CAGradientLayer {
         let gradient = CAGradientLayer()
         gradient.frame = view.bounds
-        gradient.colors = [UIColor(rgb: 0x000428, a: 1.0).cgColor, UIColor(rgb: 0x004E92, a: 1.0).cgColor]
+        gradient.colors = [UIColor(rgb: 0x000428, a: 1.0).cgColor, // dark blue
+            UIColor(rgb: 0x004E92, a: 1.0).cgColor] // light blue
         gradient.startPoint = CGPoint(x: 0, y: 0)
         gradient.endPoint = CGPoint(x: 0, y: 1)
-        view.layer.addSublayer(gradient)
+        return gradient
+    }
+    
+    func createConstellationLayer() -> CAEmitterLayer {
+        let emitter = CAEmitterLayer()
+        emitter.emitterPosition = CGPoint(x: view.center.x, y: view.center.y)
+        emitter.emitterShape = .rectangle
+        emitter.emitterSize = CGSize(width: view.frame.size.width * 2, height: view.frame.size.height * 2)
+        emitter.allowsGroupOpacity
+        let cell = CAEmitterCell()
+        cell.lifetime = 2000.0
+        //cell.velocity = 0
+        cell.scale = 0.1
+        cell.scaleRange = 0.09
+        cell.contents = UIImage(named: "star-circle.png")!.cgImage
+        cell.birthRate = 1
+        emitter.emitterCells = [cell]
+        return emitter
+    }
+    
+    func fadeInConstellationLayer() {
+        let fadeInAnimation = CABasicAnimation(keyPath: "opacity")
+        fadeInAnimation.fromValue = 0.0
+        fadeInAnimation.toValue = 1.0
+        fadeInAnimation.duration = 2.0
+        constellationLayer.add(fadeInAnimation, forKey: nil)
     }
     
     @objc func rotateStars() {
@@ -77,9 +99,7 @@ class MeteorViewController : UIViewController {
         rotateAnimation.toValue = -CGFloat(.pi * 2.0)
         rotateAnimation.duration = 1000.0
         rotateAnimation.repeatCount = .greatestFiniteMagnitude
-        print("Doing the animation!")
-        
-        skyView!.layer.add(rotateAnimation, forKey: nil)
+        skyView.layer.add(rotateAnimation, forKey: nil)
     }
 }
 
