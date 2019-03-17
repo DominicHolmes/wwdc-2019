@@ -1,6 +1,7 @@
 import UIKit
 import PlaygroundSupport
 import AVFoundation
+import MediaPlayer.MPVolumeView
 
 class MeteorViewController : UIViewController {
     
@@ -8,7 +9,14 @@ class MeteorViewController : UIViewController {
     var skyGradient: CAGradientLayer!
     var constellationLayer: CAEmitterLayer!
     
+    // Meteor animations repeat every 10 seconds
+    // They are visible if the bool is true
+    // The frequency multiplier changes with the system volume
+    var meteorLoop: (Bool, Float) = (true, 0.0)
+    var meteorTimer: Timer?
+    
     let notificationCenter = NotificationCenter.default
+    
     
     
     override func loadView() {
@@ -54,23 +62,34 @@ class MeteorViewController : UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
         // Start listening to volume change events
         notificationCenter.addObserver(self,
                                        selector: #selector(systemVolumeDidChange),
                                        name: NSNotification.Name(rawValue: "AVSystemController_SystemVolumeDidChangeNotification"),
                                        object: nil
         )
+        
+        meteorTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(spawnMeteors), userInfo: nil, repeats: true)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         // Stop listening to volume change events
         notificationCenter.removeObserver(self)
+        self.view.insertSubview(MPVolumeView(), aboveSubview: view)
+        
+        // Invalidate the meteor timer
+        meteorTimer?.invalidate()
     }
     
     // Triggered when the volume is changed
     @objc func systemVolumeDidChange(notification: NSNotification) {
         print(notification.userInfo?["AVSystemController_AudioVolumeNotificationParameter"] as? Float as Any)
+        if let newVolume = notification.userInfo?["AVSystemController_AudioVolumeNotificationParameter"] as? Float {
+            meteorLoop.1 = newVolume
+            meteorLoop.0 = (newVolume > 0)
+        }
     }
     
     func createSkyView() -> UIView {
@@ -95,7 +114,6 @@ class MeteorViewController : UIViewController {
         emitter.allowsGroupOpacity
         let cell = CAEmitterCell()
         cell.lifetime = 2000.0
-        //cell.velocity = 0
         cell.scale = 0.1
         cell.scaleRange = 0.09
         cell.contents = UIImage(named: "star-circle.png")!.cgImage
@@ -124,7 +142,9 @@ class MeteorViewController : UIViewController {
     // MARK: - Meteor spawning logic
     @objc func spawnMeteors() {
         
-        for _ in 0...10 {
+        guard meteorLoop.0 == true && meteorLoop.1 > 0 else { return }
+        
+        for _ in 0 ... Int(20 * meteorLoop.1) {
             let xoff = CGFloat.random(in: -200.0...200.0)
             let yoff = CGFloat.random(in: -200.0...200.0)
             let timeOff = Double.random(in: 0.0...10.0)
@@ -134,18 +154,9 @@ class MeteorViewController : UIViewController {
                                       startAngleFuzz: CGFloat.random(in: -0.1...0.05),
                                       endAngleFuzz: CGFloat.random(in: -0.05...0.1),
                                       origin: CGPoint(x: 300 + xoff, y: 300 + yoff))
-            
             DispatchQueue.main.asyncAfter(deadline: .now() + timeOff) {
                 self.spawnMeteor(with: params)
             }
-        }
-        let params = MeteorParams(radius: 300,
-                                  startAngleFuzz: 0.0,
-                                  endAngleFuzz: 0.0,
-                                  origin: CGPoint(x: 300, y: 300))
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.spawnMeteor(with: params)
         }
     }
     
