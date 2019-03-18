@@ -8,6 +8,7 @@ class MeteorViewController : UIViewController {
     var skyView: UIView!
     var skyGradient: CAGradientLayer!
     var constellationLayer: CAEmitterLayer!
+    var moonLayer: CAShapeLayer!
     
     // Meteor animations repeat every 10 seconds
     // They are visible if the bool is true
@@ -16,8 +17,6 @@ class MeteorViewController : UIViewController {
     var meteorTimer: Timer?
     
     let notificationCenter = NotificationCenter.default
-    
-    
     
     override func loadView() {
         let view = UIView()
@@ -48,8 +47,14 @@ class MeteorViewController : UIViewController {
         skyView.layer.addSublayer(constellationLayer)
         fadeInConstellationLayer()
         
+        // Add the moon
+        moonLayer = createMoon()
+        skyView.layer.addSublayer(moonLayer)
+        
         // Begin skybox rotation
         rotateStars()
+        
+        createMountain()
         
         
         // Button for testing
@@ -106,6 +111,7 @@ class MeteorViewController : UIViewController {
         return gradient
     }
     
+    // MARK: - Constellation
     func createConstellationLayer() -> CAEmitterLayer {
         let emitter = CAEmitterLayer()
         emitter.emitterPosition = CGPoint(x: view.center.x, y: view.center.y)
@@ -137,6 +143,46 @@ class MeteorViewController : UIViewController {
         rotateAnimation.duration = 1000.0
         rotateAnimation.repeatCount = .greatestFiniteMagnitude
         skyView.layer.add(rotateAnimation, forKey: nil)
+    }
+    
+    // MARK: - Moon
+    func createMoon() -> CAShapeLayer {
+        
+        let path = UIBezierPath()
+        path.move(to: CGPoint(x: 300, y: 300))
+        path.addArc(withCenter: view.center, radius: 50.0, startAngle: 0, endAngle: CGFloat.pi * 2, clockwise: true)
+        
+        let moon = CAShapeLayer()
+        moon.path = path.cgPath
+        moon.frame = CGRect(x: 300, y: 500, width: 50, height: 50)
+        moon.fillColor = UIColor.green.cgColor
+        
+        return moon
+    }
+    
+    // MARK: - Mountain
+    func createMountain() -> CAShapeLayer {
+        let bezierPath = UIBezierPath()
+        bezierPath.move(to: CGPoint(x: 0, y: 1154.2))
+        bezierPath.addCurve(to: CGPoint(x: 505.49, y: 996.47), controlPoint1: CGPoint(x: 0, y: 1154.2), controlPoint2: CGPoint(x: 412.74, y: 1028.94))
+        bezierPath.addCurve(to: CGPoint(x: 877.65, y: 842.21), controlPoint1: CGPoint(x: 598.24, y: 963.99), controlPoint2: CGPoint(x: 877.65, y: 842.21))
+        bezierPath.addCurve(to: CGPoint(x: 995.9, y: 823.66), controlPoint1: CGPoint(x: 877.65, y: 842.21), controlPoint2: CGPoint(x: 947.21, y: 812.06))
+        bezierPath.addCurve(to: CGPoint(x: 1138.51, y: 842.21), controlPoint1: CGPoint(x: 1044.6, y: 835.25), controlPoint2: CGPoint(x: 1138.51, y: 842.21))
+        bezierPath.addCurve(to: CGPoint(x: 1303.14, y: 842.21), controlPoint1: CGPoint(x: 1138.51, y: 842.21), controlPoint2: CGPoint(x: 1276.47, y: 845.69))
+        bezierPath.addCurve(to: CGPoint(x: 1623.13, y: 983.71), controlPoint1: CGPoint(x: 1329.8, y: 838.73), controlPoint2: CGPoint(x: 1400.53, y: 896.72))
+        bezierPath.addCurve(to: CGPoint(x: 2152.96, y: 1178.56), controlPoint1: CGPoint(x: 1845.73, y: 1070.7), controlPoint2: CGPoint(x: 2152.96, y: 1178.56))
+        bezierPath.addLine(to: CGPoint(x: 2226, y: 1202.91))
+        bezierPath.addLine(to: CGPoint(x: 2226, y: 1668))
+        bezierPath.addLine(to: CGPoint(x: 0, y: 1668))
+        bezierPath.addLine(to: CGPoint(x: 0, y: 1154.2))
+        bezierPath.close()
+        
+        let mountain = CAShapeLayer()
+        mountain.frame = view.bounds
+        mountain.path = bezierPath.cgPath
+        mountain.fillColor = UIColor.white.cgColor
+        
+        view.layer.addSublayer(mountain)
     }
     
     // MARK: - Meteor spawning logic
@@ -238,8 +284,21 @@ class MeteorViewController : UIViewController {
     }
 }
 
+//extension MeteorViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
+//    // Get the Lux from camera buffer
+//    // Credit: https://stackoverflow.com/questions/22753165/detecting-if-iphone-is-in-a-dark-room/22836060#22836060
+//    func captureOutput(_ captureOutput: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+//        let metadataDict = CMCopyDictionaryOfAttachments(allocator: nil, target: sampleBuffer, attachmentMode: kCMAttachmentMode_ShouldPropagate)
+//        let metadata = metadataDict as? [AnyHashable : Any]
+//        let exifMetadata = (metadata![kCGImagePropertyExifDictionary as String]) as? [AnyHashable : Any]
+//        let brightnessValue: Float = (exifMetadata?[kCGImagePropertyExifBrightnessValue as String] as? NSNumber)?.floatValue ?? 0.0
+//        print(brightnessValue)
+//    }
+//}
+
 // MARK: - Extensions
 extension UIColor {
+    // Credit: https://stackoverflow.com/questions/24263007/how-to-use-hex-color-values/36009030#36009030
     convenience init(red: Int, green: Int, blue: Int, a: CGFloat = 1.0) {
         self.init(
             red: CGFloat(red) / 255.0,
@@ -249,6 +308,7 @@ extension UIColor {
         )
     }
     
+    // Credit: https://stackoverflow.com/questions/24263007/how-to-use-hex-color-values/36009030#36009030
     convenience init(rgb: Int, a: CGFloat = 1.0) {
         self.init(
             red: (rgb >> 16) & 0xFF,
