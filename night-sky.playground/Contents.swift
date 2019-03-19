@@ -161,7 +161,7 @@ class MeteorViewController : UIViewController {
     }
     
     // MARK: - Mountain
-    func createMountain() -> CAShapeLayer {
+    func createMountain() {
         let bezierPath = UIBezierPath()
         bezierPath.move(to: CGPoint(x: 0, y: 1154.2))
         bezierPath.addCurve(to: CGPoint(x: 505.49, y: 996.47), controlPoint1: CGPoint(x: 0, y: 1154.2), controlPoint2: CGPoint(x: 412.74, y: 1028.94))

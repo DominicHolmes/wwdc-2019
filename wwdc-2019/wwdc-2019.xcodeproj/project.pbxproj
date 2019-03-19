@@ -12,6 +12,7 @@
 		F21C7A65223C4C4100037120 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F21C7A63223C4C4100037120 /* Main.storyboard */; };
 		F21C7A67223C4C4300037120 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F21C7A66223C4C4300037120 /* Assets.xcassets */; };
 		F21C7A6A223C4C4300037120 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F21C7A68223C4C4300037120 /* LaunchScreen.storyboard */; };
+		F23FB60A2241516700CBC3B5 /* star-circle.png in Resources */ = {isa = PBXBuildFile; fileRef = F23FB6092241516700CBC3B5 /* star-circle.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		F21C7A66223C4C4300037120 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F21C7A69223C4C4300037120 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F21C7A6B223C4C4300037120 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F23FB6092241516700CBC3B5 /* star-circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "star-circle.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 			children = (
 				F21C7A5F223C4C4100037120 /* AppDelegate.swift */,
 				F21C7A61223C4C4100037120 /* ViewController.swift */,
+				F23FB6092241516700CBC3B5 /* star-circle.png */,
 				F21C7A63223C4C4100037120 /* Main.storyboard */,
 				F21C7A66223C4C4300037120 /* Assets.xcassets */,
 				F21C7A68223C4C4300037120 /* LaunchScreen.storyboard */,
@@ -125,6 +128,7 @@
 				F21C7A6A223C4C4300037120 /* LaunchScreen.storyboard in Resources */,
 				F21C7A67223C4C4300037120 /* Assets.xcassets in Resources */,
 				F21C7A65223C4C4100037120 /* Main.storyboard in Resources */,
+				F23FB60A2241516700CBC3B5 /* star-circle.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -213,7 +217,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -268,7 +272,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
