@@ -91,6 +91,9 @@ class ViewController: UIViewController {
         button.backgroundColor = UIColor.darkGray
         skyView.addSubview(button)
         
+        // Add pan gesture for manipulating the stars
+        let panGesture = UIPanGestureRecognizer(target: self, action:(#selector(self.handlePanGesture(_:))))
+        self.view.addGestureRecognizer(panGesture)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -170,7 +173,7 @@ class ViewController: UIViewController {
         //rotateAnimation.duration = 1000.0
         rotateAnimation.duration = 500.0
         rotateAnimation.repeatCount = .greatestFiniteMagnitude
-        skyView.layer.add(rotateAnimation, forKey: nil)
+        skyView.layer.add(rotateAnimation, forKey: "skyboxRotation")
     }
     
     // MARK: - Moon
