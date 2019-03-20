@@ -13,6 +13,8 @@
 		F21C7A67223C4C4300037120 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F21C7A66223C4C4300037120 /* Assets.xcassets */; };
 		F21C7A6A223C4C4300037120 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F21C7A68223C4C4300037120 /* LaunchScreen.storyboard */; };
 		F23FB60A2241516700CBC3B5 /* star-circle.png in Resources */ = {isa = PBXBuildFile; fileRef = F23FB6092241516700CBC3B5 /* star-circle.png */; };
+		F29F54B422427BD000CCC0B8 /* Fireflies.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29F54B322427BD000CCC0B8 /* Fireflies.swift */; };
+		F29F54B622427DD300CCC0B8 /* firefly.png in Resources */ = {isa = PBXBuildFile; fileRef = F29F54B522427DD300CCC0B8 /* firefly.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		F21C7A69223C4C4300037120 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F21C7A6B223C4C4300037120 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F23FB6092241516700CBC3B5 /* star-circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "star-circle.png"; sourceTree = "<group>"; };
+		F29F54B322427BD000CCC0B8 /* Fireflies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fireflies.swift; sourceTree = "<group>"; };
+		F29F54B522427DD300CCC0B8 /* firefly.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = firefly.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,7 +62,9 @@
 			children = (
 				F21C7A5F223C4C4100037120 /* AppDelegate.swift */,
 				F21C7A61223C4C4100037120 /* ViewController.swift */,
+				F29F54B322427BD000CCC0B8 /* Fireflies.swift */,
 				F23FB6092241516700CBC3B5 /* star-circle.png */,
+				F29F54B522427DD300CCC0B8 /* firefly.png */,
 				F21C7A63223C4C4100037120 /* Main.storyboard */,
 				F21C7A66223C4C4300037120 /* Assets.xcassets */,
 				F21C7A68223C4C4300037120 /* LaunchScreen.storyboard */,
@@ -125,6 +131,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F29F54B622427DD300CCC0B8 /* firefly.png in Resources */,
 				F21C7A6A223C4C4300037120 /* LaunchScreen.storyboard in Resources */,
 				F21C7A67223C4C4300037120 /* Assets.xcassets in Resources */,
 				F21C7A65223C4C4100037120 /* Main.storyboard in Resources */,
@@ -141,6 +148,7 @@
 			files = (
 				F21C7A62223C4C4100037120 /* ViewController.swift in Sources */,
 				F21C7A60223C4C4100037120 /* AppDelegate.swift in Sources */,
+				F29F54B422427BD000CCC0B8 /* Fireflies.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

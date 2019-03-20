@@ -16,6 +16,8 @@ class ViewController: UIViewController {
     var skyGradient: CAGradientLayer!
     var constellationLayer: CAEmitterLayer!
     var moonLayer: CAShapeLayer!
+    var firefliesLayers: (CAEmitterLayer, CAEmitterLayer)!
+    var wwdcLayer: CAEmitterLayer!
     
     // Meteor animations repeat every 10 seconds
     // They are visible if the bool is true
@@ -63,8 +65,24 @@ class ViewController: UIViewController {
         // Begin skybox rotation
         rotateStars()
         
+        // Create fireflies
+        firefliesLayers = (createFirefliesLayer(), createFirefliesLayer())
+        view.layer.addSublayer(firefliesLayers.0)
+        
+        view.layer.addSublayer(createWWDC())
+        
         //createMountain()
         createCornfield()
+        
+        // Add fireflies on top of corn
+        view.layer.addSublayer(firefliesLayers.1)
+        
+        // Create WWDC layer
+        //wwdcLayer = createLogoLayer()
+        //view.layer.addSublayer(wwdcLayer)
+        /*for each in createWWDC() {
+            view.layer.addSublayer(each)
+        }*/
         
         // Button for testing
         let button = UIButton(frame: CGRect(x: 20, y: 20, width: 20, height: 20))
