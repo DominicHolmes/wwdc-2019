@@ -83,7 +83,7 @@ extension ViewController {
         emitter.emitterSize = CGSize(width: maskSize.width, height: maskSize.height)
         
         let cell = CAEmitterCell()
-        cell.lifetime = 10
+        /*cell.lifetime = 10
         
         cell.contents = UIImage(named: "firefly.png")!.cgImage
         cell.birthRate = 500
@@ -103,7 +103,12 @@ extension ViewController {
         cell.scaleSpeed = -0.5 / CGFloat(cell.lifetime)
         
         // Alpha
-        cell.alphaSpeed = -1.0 / cell.lifetime
+        cell.alphaSpeed = -1.0 / cell.lifetime*/
+        cell.lifetime = 3000.0
+        cell.scale = 0.1
+        cell.scaleRange = 0.09
+        cell.contents = UIImage(named: "star-circle.png")!.cgImage
+        cell.birthRate = 1
         
         emitter.emitterCells = [cell]
         emitter.backgroundColor = UIColor.clear.cgColor
