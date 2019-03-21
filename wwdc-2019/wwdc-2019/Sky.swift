@@ -29,7 +29,14 @@ extension ViewController {
             skyView.layer.add(rotateAnimation, forKey: nil)
             skyView.transform = skyView.transform.rotated(by: rotateValue)
             print("changed")
-            cornSnap.snapPoint = sender.location(in: view)
+            
+            cornstalkSnapBehaviors.forEach({
+                let loc = sender.location(in: view)
+                $0.snapPoint = (loc.x < $0.origin.x) ?
+                    (CGPoint(x: max($0.origin.x - 200, loc.x), y: loc.y)) :
+                    (CGPoint(x: min($0.origin.x + 200, loc.x), y: loc.y))
+            })
+            
         case .ended:
             let translation = sender.translation(in: view)
             let altitude = sender.location(in: view).y
@@ -44,7 +51,8 @@ extension ViewController {
             skyView.layer.add(rotateAnimation, forKey: nil)
             skyView.transform = skyView.transform.rotated(by: rotateValue)
             
-            cornSnap.snapPoint = CGPoint(x: view.bounds.width / 2, y: view.bounds.height - 300)
+            cornstalkSnapBehaviors.forEach({ $0.snapPoint = $0.origin })
+            //cornSnap.snapPoint = CGPoint(x: view.bounds.width / 2, y: view.bounds.height - 300)
             resumeSkyboxRotation()
             print("ended")
         default:
