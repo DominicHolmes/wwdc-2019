@@ -84,10 +84,7 @@ class ViewController: UIViewController {
         view.layer.addSublayer(createWWDC())
         
         //createMountain()
-        createCornfield()
-        
-        // Add fireflies on top of corn
-        view.layer.addSublayer(firefliesLayers.1)
+        //createCornfield()
         
         // Create WWDC layer
         //wwdcLayer = createLogoLayer()
@@ -106,7 +103,11 @@ class ViewController: UIViewController {
         // UIDynamics
         animator = UIDynamicAnimator(referenceView: view)
         
+        // Generate a dynamic cornfield
         generateCornfield(count: 80)
+        
+        // Add fireflies on top of corn
+        view.layer.addSublayer(firefliesLayers.1)
         
         // Add pan gesture for manipulating the stars
         let panGesture = UIPanGestureRecognizer(target: self, action:(#selector(self.handlePanGesture(_:))))
