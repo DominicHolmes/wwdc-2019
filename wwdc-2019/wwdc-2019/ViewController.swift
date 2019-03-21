@@ -15,7 +15,7 @@ class ViewController: UIViewController {
     var skyView: UIView!
     var skyGradient: CAGradientLayer!
     var constellationLayer: CAEmitterLayer!
-    var moonLayer: CAShapeLayer!
+    var moonView: MoonImageView!
     var firefliesLayers: (CAEmitterLayer, CAEmitterLayer)!
     var wwdcLayer: CAEmitterLayer!
     
@@ -71,8 +71,8 @@ class ViewController: UIViewController {
         fadeInConstellationLayer()
         
         // Add the moon
-        moonLayer = createMoon()
-        skyView.layer.addSublayer(moonLayer)
+        moonView = createMoon()
+        view.addSubview(moonView)
         
         // Begin skybox rotation
         rotateStars()
@@ -94,9 +94,9 @@ class ViewController: UIViewController {
         }*/
         
         // Button for testing
-        let button = UIButton(frame: CGRect(x: 20, y: 20, width: 20, height: 20))
+        let button = UIButton(frame: CGRect(x: 20, y: 40, width: 50, height: 50))
         button.sendActions(for: UIControl.Event.touchUpInside)
-        button.addTarget(self, action: #selector(spawnMeteors), for: .touchUpInside)
+        button.addTarget(self, action: #selector(moveMoon), for: .touchUpInside)
         button.backgroundColor = UIColor.darkGray
         view.addSubview(button)
         
@@ -214,7 +214,20 @@ class ViewController: UIViewController {
     }
     
     // MARK: - Moon
-    func createMoon() -> CAShapeLayer {
+    func createMoon() -> MoonImageView {
+        
+        let moonTopOffset: CGFloat = 190.0
+        let radius = view.bounds.height
+        let moonOrigin = CGPoint(x: view.center.x + radius, y: view.bounds.maxY + moonTopOffset)
+        let moon = MoonImageView(frame: CGRect(x: moonOrigin.x, y: moonOrigin.y, width: 320, height: 320))
+        //let moon = MoonImageView(frame: CGRect(x: view.bounds.width - 100, y: view.bounds.midY, width: 320, height: 320))
+        
+        /*let path = UIBezierPath()
+        path.move(to: moon.center)
+        path.addArc(withCenter: view.center, radius: moon.center.x - view.center.x, startAngle: 0, endAngle: 1.5 * .pi, clockwise: false)
+        */
+        moon.orbitInfo = MoonImageView.Orbit(center: CGPoint(x: view.center.x, y: moonOrigin.y), origin: moonOrigin, radius: view.bounds.height)
+        /*
         
         let path = UIBezierPath()
         path.move(to: CGPoint(x: 300, y: 300))
@@ -223,7 +236,7 @@ class ViewController: UIViewController {
         let moon = CAShapeLayer()
         moon.path = path.cgPath
         moon.frame = CGRect(x: 300, y: 500, width: 50, height: 50)
-        moon.fillColor = UIColor.green.cgColor
+        moon.fillColor = UIColor.green.cgColor*/
         
         return moon
     }
@@ -302,6 +315,10 @@ class ViewController: UIViewController {
         
         view.layer.addSublayer(mountainBase)
         view.layer.addSublayer(mountainShadow)
+    }
+    
+    @objc func moveMoon() {
+        moonView.addAnimation(to: 5, from: 1, of: 5, in: view)
     }
     
     // MARK: - Meteor spawning logic

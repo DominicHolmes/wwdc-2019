@@ -30,6 +30,7 @@
 		F29F54D322431B5900CCC0B8 /* cs11.png in Resources */ = {isa = PBXBuildFile; fileRef = F29F54C822431B5900CCC0B8 /* cs11.png */; };
 		F29F54D522431BFD00CCC0B8 /* Cornfield.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29F54D422431BFD00CCC0B8 /* Cornfield.swift */; };
 		F29F54D722432E5700CCC0B8 /* moon.png in Resources */ = {isa = PBXBuildFile; fileRef = F29F54D622432E5600CCC0B8 /* moon.png */; };
+		F29F54D92243DEAB00CCC0B8 /* MoonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29F54D82243DEAB00CCC0B8 /* MoonView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +59,7 @@
 		F29F54C822431B5900CCC0B8 /* cs11.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cs11.png; sourceTree = "<group>"; };
 		F29F54D422431BFD00CCC0B8 /* Cornfield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cornfield.swift; sourceTree = "<group>"; };
 		F29F54D622432E5600CCC0B8 /* moon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = moon.png; sourceTree = "<group>"; };
+		F29F54D82243DEAB00CCC0B8 /* MoonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoonView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +95,7 @@
 				F21C7A5F223C4C4100037120 /* AppDelegate.swift */,
 				F21C7A61223C4C4100037120 /* ViewController.swift */,
 				F29F54D422431BFD00CCC0B8 /* Cornfield.swift */,
+				F29F54D82243DEAB00CCC0B8 /* MoonView.swift */,
 				F29F54BB22430D2900CCC0B8 /* CornstalkImageView.swift */,
 				F29F54B322427BD000CCC0B8 /* Fireflies.swift */,
 				F29F54B722429EEC00CCC0B8 /* Sky.swift */,
@@ -211,6 +214,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F29F54D92243DEAB00CCC0B8 /* MoonView.swift in Sources */,
 				F21C7A62223C4C4100037120 /* ViewController.swift in Sources */,
 				F21C7A60223C4C4100037120 /* AppDelegate.swift in Sources */,
 				F29F54BC22430D2900CCC0B8 /* CornstalkImageView.swift in Sources */,
