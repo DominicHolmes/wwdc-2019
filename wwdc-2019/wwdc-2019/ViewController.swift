@@ -41,6 +41,10 @@ class ViewController: UIViewController {
     // Notifications
     let notificationCenter = NotificationCenter.default
     
+    // Haptic Feedback Engines
+    let hapticImpact = UIImpactFeedbackGenerator()
+    let hapticNotification = UINotificationFeedbackGenerator()
+    
     override func loadView() {
         let view = UIView()
         view.backgroundColor = .black
@@ -65,14 +69,12 @@ class ViewController: UIViewController {
         skyView = createSkyView()
         view.addSubview(skyView)
         
+        view.layer.addSublayer(createWWDC())
+        
         // Create stars with an emitter layer
         constellationLayer = createConstellationLayer()
         skyView.layer.addSublayer(constellationLayer)
         fadeInConstellationLayer()
-        
-        // Add the moon
-        moonView = createMoon()
-        view.addSubview(moonView)
         
         // Begin skybox rotation
         rotateStars()
@@ -80,25 +82,14 @@ class ViewController: UIViewController {
         // Create fireflies
         firefliesLayers = (createFirefliesLayer(), createFirefliesLayer())
         view.layer.addSublayer(firefliesLayers.0)
-        
-        view.layer.addSublayer(createWWDC())
-        
-        //createMountain()
-        //createCornfield()
-        
-        // Create WWDC layer
-        //wwdcLayer = createLogoLayer()
-        //view.layer.addSublayer(wwdcLayer)
-        /*for each in createWWDC() {
-            view.layer.addSublayer(each)
-        }*/
+
         
         // Button for testing
-        let button = UIButton(frame: CGRect(x: 20, y: 40, width: 50, height: 50))
+        /*let button = UIButton(frame: CGRect(x: 20, y: 40, width: 50, height: 50))
         button.sendActions(for: UIControl.Event.touchUpInside)
         button.addTarget(self, action: #selector(moveMoon), for: .touchUpInside)
         button.backgroundColor = UIColor.darkGray
-        view.addSubview(button)
+        view.addSubview(button)*/
         
         // UIDynamics
         animator = UIDynamicAnimator(referenceView: view)
@@ -113,8 +104,42 @@ class ViewController: UIViewController {
         let panGesture = UIPanGestureRecognizer(target: self, action:(#selector(self.handlePanGesture(_:))))
         self.view.addGestureRecognizer(panGesture)
         
+        // Add the moon
+        moonView = createMoon()
+        view.addSubview(moonView)
+        let tap = UITapGestureRecognizer(target: self, action: #selector(moveMoon(_:)))
+        tap.numberOfTapsRequired = 1
+        view.addGestureRecognizer(tap)
+        
         // Add parralax effect to skyView
         addParallaxToView(vw: skyView)
+    }
+    
+    // MARK: - Moon
+    func createMoon() -> MoonImageView {
+        
+        let moonTopOffset: CGFloat = 190.0
+        let radius = view.bounds.height
+        let moonOrigin = CGPoint(x: view.center.x + radius, y: view.bounds.maxY + moonTopOffset)
+        let moon = MoonImageView(frame: CGRect(x: moonOrigin.x, y: moonOrigin.y, width: 320, height: 320))
+        moon.orbitInfo = MoonImageView.Orbit(center: CGPoint(x: view.center.x, y: moonOrigin.y), origin: moonOrigin, radius: view.bounds.height, position: 4, totalPositions: 5)
+        
+        return moon
+    }
+    
+    @objc func moveMoon(_ gestureRecognizer : UITapGestureRecognizer) {
+        if moonView.frame.contains(gestureRecognizer.location(in: view)) {
+            moonView.increasePosition()
+            hapticNotification.notificationOccurred(.success)
+        } else {
+            dump(moonView.frame)
+            dump(gestureRecognizer.location(in: view))
+        }
+    }
+    
+    func moveMoon() {
+        moonView.increasePosition()
+        hapticNotification.notificationOccurred(.success)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -128,6 +153,10 @@ class ViewController: UIViewController {
         )
         
         meteorTimer = Timer.scheduledTimer(timeInterval: 4, target: self, selector: #selector(spawnMeteors), userInfo: nil, repeats: true)
+        
+        Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { (timer) in
+            self.moveMoon()
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -213,34 +242,6 @@ class ViewController: UIViewController {
         skyView.layer.add(rotateAnimation, forKey: "skyboxRotation")
     }
     
-    // MARK: - Moon
-    func createMoon() -> MoonImageView {
-        
-        let moonTopOffset: CGFloat = 190.0
-        let radius = view.bounds.height
-        let moonOrigin = CGPoint(x: view.center.x + radius, y: view.bounds.maxY + moonTopOffset)
-        let moon = MoonImageView(frame: CGRect(x: moonOrigin.x, y: moonOrigin.y, width: 320, height: 320))
-        //let moon = MoonImageView(frame: CGRect(x: view.bounds.width - 100, y: view.bounds.midY, width: 320, height: 320))
-        
-        /*let path = UIBezierPath()
-        path.move(to: moon.center)
-        path.addArc(withCenter: view.center, radius: moon.center.x - view.center.x, startAngle: 0, endAngle: 1.5 * .pi, clockwise: false)
-        */
-        moon.orbitInfo = MoonImageView.Orbit(center: CGPoint(x: view.center.x, y: moonOrigin.y), origin: moonOrigin, radius: view.bounds.height)
-        /*
-        
-        let path = UIBezierPath()
-        path.move(to: CGPoint(x: 300, y: 300))
-        path.addArc(withCenter: view.center, radius: 50.0, startAngle: 0, endAngle: CGFloat.pi * 2, clockwise: true)
-        
-        let moon = CAShapeLayer()
-        moon.path = path.cgPath
-        moon.frame = CGRect(x: 300, y: 500, width: 50, height: 50)
-        moon.fillColor = UIColor.green.cgColor*/
-        
-        return moon
-    }
-    
     func mtnPoint(x: CGFloat, y: CGFloat) -> CGPoint {
         let ratio = self.view.bounds.width / 2152.0
         return CGPoint(x: x * ratio, y: y * ratio)
@@ -315,10 +316,6 @@ class ViewController: UIViewController {
         
         view.layer.addSublayer(mountainBase)
         view.layer.addSublayer(mountainShadow)
-    }
-    
-    @objc func moveMoon() {
-        moonView.addAnimation(to: 5, from: 1, of: 5, in: view)
     }
     
     // MARK: - Meteor spawning logic
