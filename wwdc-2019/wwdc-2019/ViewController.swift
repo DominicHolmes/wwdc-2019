@@ -27,6 +27,15 @@ class ViewController: UIViewController {
     var meteorLoop: (Bool, Float) = (true, 0.5)
     var meteorTimer: Timer?
     
+    // UIDynamics
+    var animator: UIDynamicAnimator!
+    var gravity: UIGravityBehavior!
+    var collision: UICollisionBehavior!
+    var cornSnap: UISnapBehavior!
+    var cornPush: UIPushBehavior!
+    var isPanGestureActive: Bool = false
+    
+    // Notifications
     let notificationCenter = NotificationCenter.default
     
     override func loadView() {
@@ -89,11 +98,64 @@ class ViewController: UIViewController {
         button.sendActions(for: UIControl.Event.touchUpInside)
         button.addTarget(self, action: #selector(spawnMeteors), for: .touchUpInside)
         button.backgroundColor = UIColor.darkGray
-        skyView.addSubview(button)
+        view.addSubview(button)
+        
+        // UIDynamics
+        animator = UIDynamicAnimator(referenceView: view)
+        
+        let anchorPoint = CGPoint(x: view.bounds.midX, y: view.bounds.maxY + 100)
+        let cornstalk = CornstalkImageView(frame: CGRect(x: view.bounds.midX - 55, y: anchorPoint.y - 300, width: 110, height: 300))
+        view.addSubview(cornstalk)
+        
+        // Dragging an element with a PanGestureRecognizer for instance
+        let pinBehaviour = UIAttachmentBehavior(item: cornstalk, offsetFromCenter: UIOffset(horizontal: 0, vertical: cornstalk.bounds.height / 2), attachedToAnchor: anchorPoint)
+        //pinBehaviour.length = 0
+        //pinBehaviour.damping = 5.0
+        //pinBehaviour.frictionTorque = 5.0
+        pinBehaviour.attachmentRange = UIFloatRange(minimum: 0, maximum: 1)
+        animator.addBehavior(pinBehaviour)
+        
+        let dynamicBehavior = UIDynamicItemBehavior(items: [cornstalk])
+        //dynamicBehavior.angularResistance = 40.0
+        dynamicBehavior.resistance = 50.0
+        //dynamicBehavior.friction = 2.0
+        //dynamicBehavior.density = 20.0
+        
+        animator.addBehavior(dynamicBehavior)
+        
+        cornSnap = UISnapBehavior(item: cornstalk, snapTo: CGPoint(x: anchorPoint.x, y: anchorPoint.y - 300))
+        cornSnap.damping = 30.0
+        animator.addBehavior(cornSnap)
+        
+        /*
+         let anchorView = UIView(frame: CGRect(x: 0, y: view.bounds.maxY + 50, width: 10, height: 1))
+         view.addSubview(anchorView)
+         let anchorBehavior = UIAttachmentBehavior(item: anchorView, attachedToAnchor: CGPoint(x: view.bounds.midX, y: view.bounds.maxY + 50))
+        animator.addBehavior(anchorBehavior)
+        let pinBehavior = UIAttachmentBehavior.pinAttachment(with: cornstalk, attachedTo: anchorView, attachmentAnchor: CGPoint(x: view.bounds.midX, y: view.bounds.maxY + 50))
+        pinBehavior.attachmentRange = UIFloatRange(minimum: -1.0, maximum: 1.0)
+        pinBehavior.length = 0
+        animator.addBehavior(pinBehavior)*/
+        
+        cornPush = UIPushBehavior(items: [cornstalk], mode: .instantaneous)
+        cornPush.angle = .pi
+        cornPush.magnitude = 20.0
+        animator.addBehavior(cornPush)
+        
+        
+        gravity = UIGravityBehavior(items: [button])
+        animator.addBehavior(gravity)
+        //collision = UICollisionBehavior(items: [button, cornstalk])
+        //collision.addBoundary(withIdentifier: NSString(string: "left"), from: CGPoint(x: 0, y: 0), to: CGPoint(x: 0, y: view.bounds.maxY))
+        //collision.translatesReferenceBoundsIntoBoundary = true
+        //animator.addBehavior(collision)
         
         // Add pan gesture for manipulating the stars
         let panGesture = UIPanGestureRecognizer(target: self, action:(#selector(self.handlePanGesture(_:))))
         self.view.addGestureRecognizer(panGesture)
+        
+        // Add parralax effect to skyView
+        addParallaxToView(vw: skyView)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -117,6 +179,22 @@ class ViewController: UIViewController {
         
         // Invalidate the meteor timer
         meteorTimer?.invalidate()
+    }
+    
+    func addParallaxToView(vw: UIView) {
+        let amount = 50
+        
+        let horizontal = UIInterpolatingMotionEffect(keyPath: "center.x", type: .tiltAlongHorizontalAxis)
+        horizontal.minimumRelativeValue = -amount
+        horizontal.maximumRelativeValue = amount
+        
+        let vertical = UIInterpolatingMotionEffect(keyPath: "center.y", type: .tiltAlongVerticalAxis)
+        vertical.minimumRelativeValue = -amount
+        vertical.maximumRelativeValue = amount
+        
+        let group = UIMotionEffectGroup()
+        group.motionEffects = [horizontal, vertical]
+        vw.addMotionEffect(group)
     }
     
     // Triggered when the volume is changed
@@ -199,7 +277,7 @@ class ViewController: UIViewController {
     func createCornfield() {
         let imageView = UIImageView(frame: CGRect(x: 0, y: view.bounds.height - 310, width: view.bounds.width, height: 320))
         imageView.contentMode = .topLeft
-        imageView.image = UIImage(named: "cornfield")
+        imageView.image = UIImage(named: "")
         view.addSubview(imageView)
     }
     
