@@ -437,18 +437,18 @@ class ViewController: UIViewController {
         strokeStartAnimation.fromValue = -0.5
         strokeStartAnimation.toValue = 0.3
         //strokeStartAnimation.duration = 0.7
-        strokeStartAnimation.duration = 1.0
+        strokeStartAnimation.duration = 1.2
         
         let strokeEndAnimation = CABasicAnimation(
             keyPath: "strokeEnd")
         strokeEndAnimation.fromValue = 0.0
         strokeEndAnimation.toValue = 1.0
-        strokeEndAnimation.duration = 1.0
+        strokeEndAnimation.duration = 1.2
         
         let opacityAnimation = CAKeyframeAnimation(keyPath: "opacity")
         opacityAnimation.values = [0.0, 1.0, 0.0]
         opacityAnimation.keyTimes = [0.0, 0.5, 1.0]
-        opacityAnimation.duration = 1.3
+        opacityAnimation.duration = 1.2
         
         // Add the meteor gradient to the view
         skyView.layer.addSublayer(meteorGradient)
