@@ -132,9 +132,9 @@ class ViewController: UIViewController {
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(moveMoon(_:)))
         doubleTap.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleTap)
-        /*let tap = UITapGestureRecognizer(target: self, action: #selector(pulseCornstalks))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(pulseMoons))
         tap.numberOfTapsRequired = 1
-        view.addGestureRecognizer(tap)*/
+        view.addGestureRecognizer(tap)
         
         
         // Add parralax effect to skyView

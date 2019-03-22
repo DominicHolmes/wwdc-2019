@@ -24,14 +24,14 @@ extension ViewController {
             
             moonBalls?.forEach({ (moon) in
                 let snappingBehavior = UISnapBehavior(item: moon, snapTo: loc)
-                snappingBehavior.damping = 3.0
+                snappingBehavior.damping = 4.0
                 animator.addBehavior(snappingBehavior)
                 moonSnappingBehaviors?.append(snappingBehavior)
             })
             
         case .changed:
-            let translation = sender.translation(in: view)
-            let altitude = sender.location(in: view).y
+            //let translation = sender.translation(in: view)
+            //let altitude = sender.location(in: view).y
             //skyView.transform = CGAffineTransform(rotationAngle: (translation.x / skyView.bounds.width) * 2 * CGFloat.pi)
             
             /*let rotateAnimation = CABasicAnimation(keyPath: "transform.rotation")

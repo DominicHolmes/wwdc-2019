@@ -128,4 +128,14 @@ extension ViewController {
         
         moonBalls?.append(newMoon)
     }
+    
+    @objc func pulseMoons() {
+        guard let moons = moonBalls else { return }
+        for moon in moons {
+            let push = UIPushBehavior(items: [moon], mode: .instantaneous)
+            push.angle = CGFloat.random(in: 0 ... CGFloat.pi * 2 )
+            push.magnitude = CGFloat.random(in: 50 ... 150)
+            animator.addBehavior(push)
+        }
+    }
 }
