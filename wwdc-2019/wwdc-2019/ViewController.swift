@@ -102,7 +102,11 @@ class ViewController: UIViewController {
         animator = UIDynamicAnimator(referenceView: view)
         gravity = UIGravityBehavior(items: [])
         collision = UICollisionBehavior(items: [])
-        collision.translatesReferenceBoundsIntoBoundary = true
+        //collision.translatesReferenceBoundsIntoBoundary = true
+        //collision.setTranslatesReferenceBoundsIntoBoundary(with: UIEdgeInsets(top: view.bounds.height, left: 10, bottom: 0, right: 10))
+        collision.addBoundary(withIdentifier: NSString(string: "left"), from: CGPoint(x: 0, y: 0), to: CGPoint(x: 0, y: view.bounds.height))
+        collision.addBoundary(withIdentifier: NSString(string: "bottom"), from: CGPoint(x: 0, y: view.bounds.height), to: CGPoint(x: view.bounds.width, y: view.bounds.height))
+        collision.addBoundary(withIdentifier: NSString(string: "right"), from: CGPoint(x: view.bounds.width, y: view.bounds.height), to: CGPoint(x: view.bounds.width, y: 0))
         animator.addBehavior(gravity)
         animator.addBehavior(collision)
         
@@ -137,7 +141,7 @@ class ViewController: UIViewController {
         let moonTopOffset: CGFloat = 190.0
         let radius = view.bounds.height
         let moonOrigin = CGPoint(x: view.center.x + radius, y: view.bounds.maxY + moonTopOffset)
-        let moon = MoonImageView(frame: CGRect(x: moonOrigin.x, y: moonOrigin.y, width: 320, height: 320))
+        let moon = MoonImageView(frame: CGRect(x: moonOrigin.x, y: moonOrigin.y, width: 180, height: 180))
         moon.orbitInfo = MoonImageView.Orbit(center: CGPoint(x: view.center.x, y: moonOrigin.y), origin: moonOrigin, radius: view.bounds.height, position: 3, totalPositions: 7)
         
         return moon

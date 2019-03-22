@@ -63,7 +63,7 @@ class MoonImageView: UIImageView, CAAnimationDelegate {
         
         self.layer.add(animation, forKey: "moonAnimation")
         
-        self.frame = CGRect(x: endOfPath.x - 160, y: endOfPath.y - 160, width: 320, height: 320)
+        self.frame = CGRect(x: endOfPath.x - 90, y: endOfPath.y - 90, width: 180, height: 180)
     }
     
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
@@ -103,11 +103,12 @@ extension ViewController {
             if let ropeBehavior = self.moonRopeBehaviour {
                 self.animator.removeBehavior(ropeBehavior)
             }
+            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { _ in self.spawnRandomMoon() })
         }
     }
     
     func spawnRandomMoon() {
-        spawnMoon(with: CGRect(x: CGFloat.random(in: 20 ... view.bounds.width - 20), y: -400, width: 320, height: 320))
+        spawnMoon(with: CGRect(x: CGFloat.random(in: 20 ... view.bounds.width - 20), y: -400, width: 180, height: 180))
     }
     
     func spawnMoon(with frame: CGRect) {

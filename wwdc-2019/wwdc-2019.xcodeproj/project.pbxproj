@@ -29,8 +29,8 @@
 		F29F54D222431B5900CCC0B8 /* cs3.png in Resources */ = {isa = PBXBuildFile; fileRef = F29F54C722431B5900CCC0B8 /* cs3.png */; };
 		F29F54D322431B5900CCC0B8 /* cs11.png in Resources */ = {isa = PBXBuildFile; fileRef = F29F54C822431B5900CCC0B8 /* cs11.png */; };
 		F29F54D522431BFD00CCC0B8 /* Cornfield.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29F54D422431BFD00CCC0B8 /* Cornfield.swift */; };
-		F29F54D722432E5700CCC0B8 /* moon.png in Resources */ = {isa = PBXBuildFile; fileRef = F29F54D622432E5600CCC0B8 /* moon.png */; };
 		F29F54D92243DEAB00CCC0B8 /* MoonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29F54D82243DEAB00CCC0B8 /* MoonView.swift */; };
+		F29F560E2244766F00CCC0B8 /* moon.png in Resources */ = {isa = PBXBuildFile; fileRef = F29F560D2244766F00CCC0B8 /* moon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,8 +58,8 @@
 		F29F54C722431B5900CCC0B8 /* cs3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cs3.png; sourceTree = "<group>"; };
 		F29F54C822431B5900CCC0B8 /* cs11.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cs11.png; sourceTree = "<group>"; };
 		F29F54D422431BFD00CCC0B8 /* Cornfield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cornfield.swift; sourceTree = "<group>"; };
-		F29F54D622432E5600CCC0B8 /* moon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = moon.png; sourceTree = "<group>"; };
 		F29F54D82243DEAB00CCC0B8 /* MoonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoonView.swift; sourceTree = "<group>"; };
+		F29F560D2244766F00CCC0B8 /* moon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = moon.png; path = ../../../../../../../Desktop/moon.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,7 +102,7 @@
 				F29F54BD22431B4D00CCC0B8 /* cornstalks */,
 				F23FB6092241516700CBC3B5 /* star-circle.png */,
 				F29F54B522427DD300CCC0B8 /* firefly.png */,
-				F29F54D622432E5600CCC0B8 /* moon.png */,
+				F29F560D2244766F00CCC0B8 /* moon.png */,
 				F21C7A63223C4C4100037120 /* Main.storyboard */,
 				F21C7A66223C4C4300037120 /* Assets.xcassets */,
 				F21C7A68223C4C4300037120 /* LaunchScreen.storyboard */,
@@ -189,6 +189,7 @@
 			files = (
 				F29F54CB22431B5900CCC0B8 /* cs8.png in Resources */,
 				F29F54CC22431B5900CCC0B8 /* cs1.png in Resources */,
+				F29F560E2244766F00CCC0B8 /* moon.png in Resources */,
 				F29F54B622427DD300CCC0B8 /* firefly.png in Resources */,
 				F29F54D222431B5900CCC0B8 /* cs3.png in Resources */,
 				F29F54D122431B5900CCC0B8 /* cs4.png in Resources */,
@@ -202,7 +203,6 @@
 				F29F54CD22431B5900CCC0B8 /* cs5.png in Resources */,
 				F29F54D022431B5900CCC0B8 /* cs7.png in Resources */,
 				F21C7A65223C4C4100037120 /* Main.storyboard in Resources */,
-				F29F54D722432E5700CCC0B8 /* moon.png in Resources */,
 				F23FB60A2241516700CBC3B5 /* star-circle.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
