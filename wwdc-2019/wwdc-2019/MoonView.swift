@@ -78,7 +78,7 @@ extension ViewController {
         moonView.layer.needsDisplayOnBoundsChange = true
         
         let newMoon = MoonImageView(frame: moonView.frame)
-        view.addSubview(newMoon)
+        moonCollectionView.addSubview(newMoon)
         moonView.removeFromSuperview()
         
         // Anchor point
@@ -99,6 +99,10 @@ extension ViewController {
         gravity.addItem(newMoon)
         collision.addItem(newMoon)
         
+        // Add it to the ~collection~
+        moonBalls = [UIDynamicItem]()
+        moonBalls?.append(newMoon)
+        
         Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { (_) in
             if let ropeBehavior = self.moonRopeBehaviour {
                 self.animator.removeBehavior(ropeBehavior)
@@ -113,7 +117,7 @@ extension ViewController {
     
     func spawnMoon(with frame: CGRect) {
         let newMoon = MoonImageView(frame: frame)
-        view.addSubview(newMoon)
+        moonCollectionView.addSubview(newMoon)
         gravity.addItem(newMoon)
         collision.addItem(newMoon)
         
@@ -121,5 +125,7 @@ extension ViewController {
         props.resistance = 0.8
         props.elasticity = 0.8
         animator.addBehavior(props)
+        
+        moonBalls?.append(newMoon)
     }
 }

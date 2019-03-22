@@ -13,8 +13,22 @@ extension ViewController {
     @objc func handlePanGesture(_ sender: UIPanGestureRecognizer) {
         switch sender.state {
         case .began:
-            skyView.layer.removeAnimation(forKey: "skyboxRotation")
+            //skyView.layer.removeAnimation(forKey: "skyboxRotation")
             //print("began")
+            
+            let loc = sender.location(in: view)
+            
+            if moonSnappingBehaviors == nil {
+                moonSnappingBehaviors = [UISnapBehavior]()
+            }
+            
+            moonBalls?.forEach({ (moon) in
+                let snappingBehavior = UISnapBehavior(item: moon, snapTo: loc)
+                snappingBehavior.damping = 3.0
+                animator.addBehavior(snappingBehavior)
+                moonSnappingBehaviors?.append(snappingBehavior)
+            })
+            
         case .changed:
             let translation = sender.translation(in: view)
             let altitude = sender.location(in: view).y
@@ -30,12 +44,19 @@ extension ViewController {
             skyView.transform = skyView.transform.rotated(by: rotateValue)
             //print("changed")*/
             
+            let loc = sender.location(in: view)
+            
             cornstalkSnapBehaviors.forEach({
-                let loc = sender.location(in: view)
                 $0.snapPoint = (loc.x < $0.origin.x) ?
                     (CGPoint(x: max($0.origin.x - 200, loc.x), y: loc.y)) :
                     (CGPoint(x: min($0.origin.x + 200, loc.x), y: loc.y))
             })
+            
+            if let moonSnaps = moonSnappingBehaviors {
+                moonSnaps.forEach { (snap) in
+                    snap.snapPoint = loc
+                }
+            }
             
         case .ended:
             //let translation = sender.translation(in: view)
@@ -55,6 +76,14 @@ extension ViewController {
             //cornSnap.snapPoint = CGPoint(x: view.bounds.width / 2, y: view.bounds.height - 300)
             //resumeSkyboxRotation()
             //print("ended")
+            
+            if let moonSnaps = moonSnappingBehaviors {
+                moonSnaps.forEach { (snap) in
+                    animator.removeBehavior(snap)
+                }
+            }
+            moonSnappingBehaviors = nil
+            
         default:
             break
         }

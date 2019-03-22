@@ -18,6 +18,9 @@ class ViewController: UIViewController {
     
     // Moon
     var moonView: MoonImageView!
+    var moonCollectionView: UIView!
+    var moonBalls: [UIDynamicItem]?
+    var moonSnappingBehaviors: [UISnapBehavior]?
     var moonRopeBehaviour: UIAttachmentBehavior?
     
     var firefliesLayers: (CAEmitterLayer, CAEmitterLayer)!
@@ -110,6 +113,12 @@ class ViewController: UIViewController {
         animator.addBehavior(gravity)
         animator.addBehavior(collision)
         
+        // Add the moon
+        moonView = createMoon()
+        moonCollectionView = UIView(frame: view.bounds)
+        view.addSubview(moonCollectionView)
+        view.addSubview(moonView)
+        
         // Generate a dynamic cornfield
         generateCornfield(count: 80)
         
@@ -120,9 +129,6 @@ class ViewController: UIViewController {
         let panGesture = UIPanGestureRecognizer(target: self, action:(#selector(self.handlePanGesture(_:))))
         self.view.addGestureRecognizer(panGesture)
         
-        // Add the moon
-        moonView = createMoon()
-        view.addSubview(moonView)
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(moveMoon(_:)))
         doubleTap.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleTap)
@@ -445,7 +451,7 @@ class ViewController: UIViewController {
         opacityAnimation.duration = 1.3
         
         // Add the meteor gradient to the view
-        view.layer.addSublayer(meteorGradient)
+        skyView.layer.addSublayer(meteorGradient)
         
         // Animate the meteor mask
         meteorMask.add(strokeStartAnimation, forKey: "meteorAnimation")
