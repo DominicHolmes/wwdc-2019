@@ -20,7 +20,7 @@ extension ViewController {
             let altitude = sender.location(in: view).y
             //skyView.transform = CGAffineTransform(rotationAngle: (translation.x / skyView.bounds.width) * 2 * CGFloat.pi)
             
-            let rotateAnimation = CABasicAnimation(keyPath: "transform.rotation")
+            /*let rotateAnimation = CABasicAnimation(keyPath: "transform.rotation")
             rotateAnimation.fromValue = 0.0
             let rotateValue = CGFloat(.pi * 2.0) * (translation.x / skyView.bounds.width) * 0.01
             rotateAnimation.toValue = rotateValue
@@ -28,7 +28,7 @@ extension ViewController {
             rotateAnimation.repeatCount = 0
             skyView.layer.add(rotateAnimation, forKey: nil)
             skyView.transform = skyView.transform.rotated(by: rotateValue)
-            //print("changed")
+            //print("changed")*/
             
             cornstalkSnapBehaviors.forEach({
                 let loc = sender.location(in: view)
@@ -38,22 +38,22 @@ extension ViewController {
             })
             
         case .ended:
-            let translation = sender.translation(in: view)
-            let altitude = sender.location(in: view).y
+            //let translation = sender.translation(in: view)
+            //let altitude = sender.location(in: view).y
             //skyView.transform = CGAffineTransform(rotationAngle: (translation.x / skyView.bounds.width) * 2 * CGFloat.pi)
             
-            let rotateAnimation = CABasicAnimation(keyPath: "transform.rotation")
+            /*let rotateAnimation = CABasicAnimation(keyPath: "transform.rotation")
             rotateAnimation.fromValue = 0.0
             let rotateValue = CGFloat(.pi * 2.0) * (translation.x / skyView.bounds.width) * 0.01
             rotateAnimation.toValue = rotateValue
             rotateAnimation.duration = 0.01
             rotateAnimation.repeatCount = 0
             skyView.layer.add(rotateAnimation, forKey: nil)
-            skyView.transform = skyView.transform.rotated(by: rotateValue)
+            skyView.transform = skyView.transform.rotated(by: rotateValue)*/
             
             cornstalkSnapBehaviors.forEach({ $0.snapPoint = $0.origin })
             //cornSnap.snapPoint = CGPoint(x: view.bounds.width / 2, y: view.bounds.height - 300)
-            resumeSkyboxRotation()
+            //resumeSkyboxRotation()
             //print("ended")
         default:
             break

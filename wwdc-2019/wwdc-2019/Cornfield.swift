@@ -64,6 +64,15 @@ extension ViewController {
         
     }
     
+    @objc func pulseCornstalks() {
+        for stalk in cornstalks {
+            let push = UIPushBehavior(items: [stalk], mode: .instantaneous)
+            push.angle = Bool.random() ? 0.0 : CGFloat.pi
+            push.magnitude = CGFloat.random(in: 50 ... 200)
+            animator.addBehavior(push)
+        }
+    }
+    
     func randoFunc(_ animated: Bool) {
 
         let anchorPoint = CGPoint(x: view.bounds.midX, y: view.bounds.maxY + 100)

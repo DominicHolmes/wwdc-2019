@@ -15,9 +15,13 @@ class ViewController: UIViewController {
     var skyView: UIView!
     var skyGradient: CAGradientLayer!
     var constellationLayer: CAEmitterLayer!
+    
+    // Moon
     var moonView: MoonImageView!
+    var moonRopeBehaviour: UIAttachmentBehavior?
+    
     var firefliesLayers: (CAEmitterLayer, CAEmitterLayer)!
-    var wwdcLayer: CAEmitterLayer!
+    var wwdcLayer: CALayer!
     
     // Meteor animations repeat every 10 seconds
     // They are visible if the bool is true
@@ -69,15 +73,18 @@ class ViewController: UIViewController {
         skyView = createSkyView()
         view.addSubview(skyView)
         
-        view.layer.addSublayer(createWWDC())
-        
         // Create stars with an emitter layer
         constellationLayer = createConstellationLayer()
         skyView.layer.addSublayer(constellationLayer)
         fadeInConstellationLayer()
         
+        // Create WWDC layer, add it to the sky
+        wwdcLayer = createWWDC()
+        wwdcLayer.opacity = 0.0
+        skyView.layer.addSublayer(wwdcLayer)
+        
         // Begin skybox rotation
-        rotateStars()
+        //rotateStars()
         
         // Create fireflies
         firefliesLayers = (createFirefliesLayer(), createFirefliesLayer())
@@ -93,6 +100,11 @@ class ViewController: UIViewController {
         
         // UIDynamics
         animator = UIDynamicAnimator(referenceView: view)
+        gravity = UIGravityBehavior(items: [])
+        collision = UICollisionBehavior(items: [])
+        collision.translatesReferenceBoundsIntoBoundary = true
+        animator.addBehavior(gravity)
+        animator.addBehavior(collision)
         
         // Generate a dynamic cornfield
         generateCornfield(count: 80)
@@ -107,9 +119,13 @@ class ViewController: UIViewController {
         // Add the moon
         moonView = createMoon()
         view.addSubview(moonView)
-        let tap = UITapGestureRecognizer(target: self, action: #selector(moveMoon(_:)))
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(moveMoon(_:)))
+        doubleTap.numberOfTapsRequired = 2
+        view.addGestureRecognizer(doubleTap)
+        /*let tap = UITapGestureRecognizer(target: self, action: #selector(pulseCornstalks))
         tap.numberOfTapsRequired = 1
-        view.addGestureRecognizer(tap)
+        view.addGestureRecognizer(tap)*/
+        
         
         // Add parralax effect to skyView
         addParallaxToView(vw: skyView)
@@ -122,24 +138,29 @@ class ViewController: UIViewController {
         let radius = view.bounds.height
         let moonOrigin = CGPoint(x: view.center.x + radius, y: view.bounds.maxY + moonTopOffset)
         let moon = MoonImageView(frame: CGRect(x: moonOrigin.x, y: moonOrigin.y, width: 320, height: 320))
-        moon.orbitInfo = MoonImageView.Orbit(center: CGPoint(x: view.center.x, y: moonOrigin.y), origin: moonOrigin, radius: view.bounds.height, position: 4, totalPositions: 5)
+        moon.orbitInfo = MoonImageView.Orbit(center: CGPoint(x: view.center.x, y: moonOrigin.y), origin: moonOrigin, radius: view.bounds.height, position: 3, totalPositions: 7)
         
         return moon
     }
     
     @objc func moveMoon(_ gestureRecognizer : UITapGestureRecognizer) {
         if moonView.frame.contains(gestureRecognizer.location(in: view)) {
-            moonView.increasePosition()
-            hapticNotification.notificationOccurred(.success)
-        } else {
-            dump(moonView.frame)
-            dump(gestureRecognizer.location(in: view))
+            moveMoon()
         }
     }
     
     func moveMoon() {
+        guard !moonView.animationInProgress, let orbit = moonView.orbitInfo, orbit.position < orbit.totalPositions else { return }
         moonView.increasePosition()
         hapticNotification.notificationOccurred(.success)
+        
+        if orbit.position == orbit.totalPositions - 1 {
+            Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { (timer) in
+                print("FADE IN WWDC")
+                self.fadeInWWDCLayer()
+                self.addRope()
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -230,6 +251,15 @@ class ViewController: UIViewController {
         fadeInAnimation.toValue = 1.0
         fadeInAnimation.duration = 2.0
         constellationLayer.add(fadeInAnimation, forKey: nil)
+    }
+    
+    func fadeInWWDCLayer() {
+        let fadeInAnimation = CABasicAnimation(keyPath: "opacity")
+        fadeInAnimation.fromValue = 0.0
+        fadeInAnimation.toValue = 1.0
+        fadeInAnimation.duration = 2.0
+        wwdcLayer.opacity = 1.0
+        wwdcLayer.add(fadeInAnimation, forKey: nil)
     }
     
     @objc func rotateStars() {
@@ -325,7 +355,7 @@ class ViewController: UIViewController {
         
         let widthOffset = view.bounds.width / 2.0
         
-        for _ in 0 ... Int(20 * meteorLoop.1) {
+        for _ in 0 ... Int(2 * meteorLoop.1) {
             
             let timeOff = Double.random(in: 0.0 ... 4.0)
             let radius = CGFloat.random(in: 150 ... 250)
