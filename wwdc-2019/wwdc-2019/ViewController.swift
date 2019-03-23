@@ -109,9 +109,9 @@ class ViewController: UIViewController {
         collision = UICollisionBehavior(items: [])
         //collision.translatesReferenceBoundsIntoBoundary = true
         //collision.setTranslatesReferenceBoundsIntoBoundary(with: UIEdgeInsets(top: view.bounds.height, left: 10, bottom: 0, right: 10))
-        collision.addBoundary(withIdentifier: NSString(string: "left"), from: CGPoint(x: -100, y: 0), to: CGPoint(x: 0, y: view.bounds.height))
+        collision.addBoundary(withIdentifier: NSString(string: "left"), from: CGPoint(x: -100, y: -4000), to: CGPoint(x: 0, y: view.bounds.height))
         collision.addBoundary(withIdentifier: NSString(string: "bottom"), from: CGPoint(x: 0, y: view.bounds.height), to: CGPoint(x: view.bounds.width, y: view.bounds.height))
-        collision.addBoundary(withIdentifier: NSString(string: "right"), from: CGPoint(x: view.bounds.width + 100, y: view.bounds.height), to: CGPoint(x: view.bounds.width, y: 0))
+        collision.addBoundary(withIdentifier: NSString(string: "right"), from: CGPoint(x: view.bounds.width + 100, y: view.bounds.height), to: CGPoint(x: view.bounds.width, y: -4000))
         animator.addBehavior(gravity)
         animator.addBehavior(collision)
         

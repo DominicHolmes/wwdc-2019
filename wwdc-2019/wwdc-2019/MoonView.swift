@@ -138,7 +138,11 @@ extension ViewController {
         if let ropeBehavior = self.moonRopeBehaviour {
             self.animator.removeBehavior(ropeBehavior)
         }
-        Timer.scheduledTimer(withTimeInterval: 1.5, repeats: true, block: { _ in self.spawnRandomMoon() })
+        Timer.scheduledTimer(withTimeInterval: 1.5, repeats: true, block: { _ in
+            if (self.moonBalls?.count ?? 0) < 20 {
+                self.spawnRandomMoon()
+            }
+        })
         
         UIView.animate(withDuration: 2.0) {
             self.moonRopeView?.alpha = 0.0
