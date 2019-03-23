@@ -138,10 +138,13 @@ extension ViewController {
         if let ropeBehavior = self.moonRopeBehaviour {
             self.animator.removeBehavior(ropeBehavior)
         }
-        Timer.scheduledTimer(withTimeInterval: 1.5, repeats: true, block: { _ in
-            if (self.moonBalls?.count ?? 0) < 20 {
-                self.spawnRandomMoon()
-            }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0, execute: {
+            Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true, block: { _ in
+                if (self.moonBalls?.count ?? 0) < 20 {
+                    self.spawnRandomMoon()
+                }
+            })
         })
         
         UIView.animate(withDuration: 2.0) {
@@ -160,19 +163,24 @@ extension ViewController {
     
     @objc func pulseMoons(_ sender: UITapGestureRecognizer) {
         // Pulse the moons, if they exist
+        pulseMoons()
+        
+        // Cut the moon rope, if it still exists
+        if moonRopeFrame != nil {
+            if moonRopeFrame?.contains(sender.location(in: view)) ?? false {
+                cutMoonRope()
+            }
+        }
+    }
+    
+    func pulseMoons() {
+        // Pulse the moons, if they exist
         if let moons = moonBalls, moonRopeFrame == nil {
             for moon in moons {
                 let push = UIPushBehavior(items: [moon], mode: .instantaneous)
                 push.angle = CGFloat.random(in: 0 ... CGFloat.pi * 2 )
                 push.magnitude = CGFloat.random(in: 50 ... 150)
                 animator.addBehavior(push)
-            }
-        }
-        
-        // Cut the moon rope, if it still exists
-        if moonRopeFrame != nil {
-            if moonRopeFrame?.contains(sender.location(in: view)) ?? false {
-                cutMoonRope()
             }
         }
     }
