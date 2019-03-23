@@ -22,6 +22,8 @@ class ViewController: UIViewController {
     var moonBalls: [UIDynamicItem]?
     var moonSnappingBehaviors: [UISnapBehavior]?
     var moonRopeBehaviour: UIAttachmentBehavior?
+    var moonRopeFrame: CGRect?
+    var moonRopeView: UIView? = nil
     
     var firefliesLayers: (CAEmitterLayer, CAEmitterLayer)!
     var wwdcLayer: CALayer!
@@ -107,9 +109,9 @@ class ViewController: UIViewController {
         collision = UICollisionBehavior(items: [])
         //collision.translatesReferenceBoundsIntoBoundary = true
         //collision.setTranslatesReferenceBoundsIntoBoundary(with: UIEdgeInsets(top: view.bounds.height, left: 10, bottom: 0, right: 10))
-        collision.addBoundary(withIdentifier: NSString(string: "left"), from: CGPoint(x: 0, y: 0), to: CGPoint(x: 0, y: view.bounds.height))
+        collision.addBoundary(withIdentifier: NSString(string: "left"), from: CGPoint(x: -100, y: 0), to: CGPoint(x: 0, y: view.bounds.height))
         collision.addBoundary(withIdentifier: NSString(string: "bottom"), from: CGPoint(x: 0, y: view.bounds.height), to: CGPoint(x: view.bounds.width, y: view.bounds.height))
-        collision.addBoundary(withIdentifier: NSString(string: "right"), from: CGPoint(x: view.bounds.width, y: view.bounds.height), to: CGPoint(x: view.bounds.width, y: 0))
+        collision.addBoundary(withIdentifier: NSString(string: "right"), from: CGPoint(x: view.bounds.width + 100, y: view.bounds.height), to: CGPoint(x: view.bounds.width, y: 0))
         animator.addBehavior(gravity)
         animator.addBehavior(collision)
         
@@ -132,10 +134,13 @@ class ViewController: UIViewController {
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(moveMoon(_:)))
         doubleTap.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleTap)
-        let tap = UITapGestureRecognizer(target: self, action: #selector(pulseMoons))
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(pulseMoons(_:)))
         tap.numberOfTapsRequired = 1
         view.addGestureRecognizer(tap)
         
+        //let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(swipeMoonRope(_:)))
+        //view.addGestureRecognizer(swipeGesture)
         
         // Add parralax effect to skyView
         addParallaxToView(vw: skyView)
@@ -276,8 +281,7 @@ class ViewController: UIViewController {
         let rotateAnimation = CABasicAnimation(keyPath: "transform.rotation")
         rotateAnimation.fromValue = 0.0
         rotateAnimation.toValue = -CGFloat(.pi * 2.0)
-        //rotateAnimation.duration = 1000.0
-        rotateAnimation.duration = 500.0
+        rotateAnimation.duration = 300.0
         rotateAnimation.repeatCount = .greatestFiniteMagnitude
         skyView.layer.add(rotateAnimation, forKey: "skyboxRotation")
     }

@@ -29,6 +29,13 @@ extension ViewController {
                 moonSnappingBehaviors?.append(snappingBehavior)
             })
             
+            if firefliesLayers.0.birthRate == 0 {
+                Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { (_) in
+                    self.firefliesLayers.0.birthRate = min(self.firefliesLayers.0.birthRate + 0.05, 1.0)
+                    self.firefliesLayers.1.birthRate = min(self.firefliesLayers.1.birthRate + 0.05, 1.0)
+                }
+            }
+            
         case .changed:
             //let translation = sender.translation(in: view)
             //let altitude = sender.location(in: view).y
@@ -51,6 +58,12 @@ extension ViewController {
                     (CGPoint(x: max($0.origin.x - 200, loc.x), y: loc.y)) :
                     (CGPoint(x: min($0.origin.x + 200, loc.x), y: loc.y))
             })
+            
+            if let moonRopeFrame = self.moonRopeFrame {
+                if moonRopeFrame.contains(sender.location(in: view)) {
+                    swipeMoonRope()
+                }
+            }
             
             if let moonSnaps = moonSnappingBehaviors {
                 moonSnaps.forEach { (snap) in

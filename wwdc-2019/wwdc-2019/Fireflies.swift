@@ -15,11 +15,14 @@ extension ViewController {
         emitter.emitterPosition = CGPoint(x: view.center.x, y: view.bounds.maxY + 5)
         emitter.emitterShape = .line
         emitter.emitterSize = CGSize(width: view.bounds.width, height: 1)
+        emitter.birthRate = 0.0
+        
+        
         let cell = CAEmitterCell()
         cell.lifetime = 10
     
         cell.contents = UIImage(named: "firefly.png")!.cgImage
-        cell.birthRate = 4
+        cell.birthRate = 8
         
         // Emission angles and acceleration
         cell.emissionLongitude = 2 * .pi

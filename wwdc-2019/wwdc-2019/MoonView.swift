@@ -81,6 +81,17 @@ extension ViewController {
         moonCollectionView.addSubview(newMoon)
         moonView.removeFromSuperview()
         
+        // Draw the moon rope, add swipe recognizers
+        moonRopeView = UIView(frame: CGRect(x: view.center.x - 1, y: 0, width: 2, height: newMoon.frame.minY))
+        self.moonRopeFrame = CGRect(x: view.center.x - 10, y: -5, width: 20, height: newMoon.frame.minY + 10)
+        moonRopeView!.backgroundColor = .gray
+        moonRopeView!.alpha = 0.0
+        view.addSubview(moonRopeView!)
+        UIView.animate(withDuration: 1.0) {
+            self.moonRopeView?.alpha = 1.0
+        }
+
+        
         // Anchor point
         let ropeAnchor = CGPoint(x: newMoon.center.x, y: newMoon.center.y - (newMoon.bounds.height / 2))
 
@@ -102,13 +113,6 @@ extension ViewController {
         // Add it to the ~collection~
         moonBalls = [UIDynamicItem]()
         moonBalls?.append(newMoon)
-        
-        Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { (_) in
-            if let ropeBehavior = self.moonRopeBehaviour {
-                self.animator.removeBehavior(ropeBehavior)
-            }
-            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { _ in self.spawnRandomMoon() })
-        }
     }
     
     func spawnRandomMoon() {
@@ -129,13 +133,43 @@ extension ViewController {
         moonBalls?.append(newMoon)
     }
     
-    @objc func pulseMoons() {
-        guard let moons = moonBalls else { return }
-        for moon in moons {
-            let push = UIPushBehavior(items: [moon], mode: .instantaneous)
-            push.angle = CGFloat.random(in: 0 ... CGFloat.pi * 2 )
-            push.magnitude = CGFloat.random(in: 50 ... 150)
-            animator.addBehavior(push)
+    func cutMoonRope() {
+        moonRopeFrame = nil
+        if let ropeBehavior = self.moonRopeBehaviour {
+            self.animator.removeBehavior(ropeBehavior)
+        }
+        Timer.scheduledTimer(withTimeInterval: 1.5, repeats: true, block: { _ in self.spawnRandomMoon() })
+        
+        UIView.animate(withDuration: 2.0) {
+            self.moonRopeView?.alpha = 0.0
+        }
+        
+        rotateStars()
+    }
+    
+    @objc func swipeMoonRope() {
+        // Cut the moon rope, if it still exists
+        if moonRopeFrame != nil {
+            cutMoonRope()
+        }
+    }
+    
+    @objc func pulseMoons(_ sender: UITapGestureRecognizer) {
+        // Pulse the moons, if they exist
+        if let moons = moonBalls, moonRopeFrame == nil {
+            for moon in moons {
+                let push = UIPushBehavior(items: [moon], mode: .instantaneous)
+                push.angle = CGFloat.random(in: 0 ... CGFloat.pi * 2 )
+                push.magnitude = CGFloat.random(in: 50 ... 150)
+                animator.addBehavior(push)
+            }
+        }
+        
+        // Cut the moon rope, if it still exists
+        if moonRopeFrame != nil {
+            if moonRopeFrame?.contains(sender.location(in: view)) ?? false {
+                cutMoonRope()
+            }
         }
     }
 }
