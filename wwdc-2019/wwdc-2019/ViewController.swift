@@ -13,6 +13,7 @@ import UIKit
 class ViewController: UIViewController {
     
     var skyView: UIView!
+    var meteorView: UIView!
     var skyGradient: CAGradientLayer!
     var constellationLayer: CAEmitterLayer!
     
@@ -77,6 +78,10 @@ class ViewController: UIViewController {
         // Create sky view (for stars etc)
         skyView = createSkyView()
         view.addSubview(skyView)
+        
+        // Create meteor view (so that these don't rotate)
+        meteorView = UIView(frame: view.bounds)
+        view.addSubview(meteorView)
         
         // Create stars with an emitter layer
         constellationLayer = createConstellationLayer()
@@ -455,7 +460,7 @@ class ViewController: UIViewController {
         opacityAnimation.duration = 1.2
         
         // Add the meteor gradient to the view
-        skyView.layer.addSublayer(meteorGradient)
+        meteorView.layer.addSublayer(meteorGradient)
         
         // Animate the meteor mask
         meteorMask.add(strokeStartAnimation, forKey: "meteorAnimation")
