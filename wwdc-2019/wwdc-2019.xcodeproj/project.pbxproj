@@ -15,8 +15,8 @@
 		F23FB60A2241516700CBC3B5 /* star-circle.png in Resources */ = {isa = PBXBuildFile; fileRef = F23FB6092241516700CBC3B5 /* star-circle.png */; };
 		F29F54B422427BD000CCC0B8 /* Fireflies.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29F54B322427BD000CCC0B8 /* Fireflies.swift */; };
 		F29F54B622427DD300CCC0B8 /* firefly.png in Resources */ = {isa = PBXBuildFile; fileRef = F29F54B522427DD300CCC0B8 /* firefly.png */; };
-		F29F54B822429EEC00CCC0B8 /* Sky.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29F54B722429EEC00CCC0B8 /* Sky.swift */; };
-		F29F54BC22430D2900CCC0B8 /* CornstalkImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29F54BB22430D2900CCC0B8 /* CornstalkImageView.swift */; };
+		F29F54B822429EEC00CCC0B8 /* Stars.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29F54B722429EEC00CCC0B8 /* Stars.swift */; };
+		F29F54BC22430D2900CCC0B8 /* Cornstalk.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29F54BB22430D2900CCC0B8 /* Cornstalk.swift */; };
 		F29F54C922431B5900CCC0B8 /* cs9.png in Resources */ = {isa = PBXBuildFile; fileRef = F29F54BE22431B5900CCC0B8 /* cs9.png */; };
 		F29F54CA22431B5900CCC0B8 /* cs2.png in Resources */ = {isa = PBXBuildFile; fileRef = F29F54BF22431B5900CCC0B8 /* cs2.png */; };
 		F29F54CB22431B5900CCC0B8 /* cs8.png in Resources */ = {isa = PBXBuildFile; fileRef = F29F54C022431B5900CCC0B8 /* cs8.png */; };
@@ -29,8 +29,11 @@
 		F29F54D222431B5900CCC0B8 /* cs3.png in Resources */ = {isa = PBXBuildFile; fileRef = F29F54C722431B5900CCC0B8 /* cs3.png */; };
 		F29F54D322431B5900CCC0B8 /* cs11.png in Resources */ = {isa = PBXBuildFile; fileRef = F29F54C822431B5900CCC0B8 /* cs11.png */; };
 		F29F54D522431BFD00CCC0B8 /* Cornfield.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29F54D422431BFD00CCC0B8 /* Cornfield.swift */; };
-		F29F54D92243DEAB00CCC0B8 /* MoonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29F54D82243DEAB00CCC0B8 /* MoonView.swift */; };
+		F29F54D92243DEAB00CCC0B8 /* Moon.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29F54D82243DEAB00CCC0B8 /* Moon.swift */; };
 		F29F560E2244766F00CCC0B8 /* moon.png in Resources */ = {isa = PBXBuildFile; fileRef = F29F560D2244766F00CCC0B8 /* moon.png */; };
+		F29F56102247FF0C00CCC0B8 /* Sky.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29F560F2247FF0C00CCC0B8 /* Sky.swift */; };
+		F29F56122247FF5800CCC0B8 /* Meteor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29F56112247FF5800CCC0B8 /* Meteor.swift */; };
+		F29F56142247FF8300CCC0B8 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29F56132247FF8300CCC0B8 /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,8 +47,8 @@
 		F23FB6092241516700CBC3B5 /* star-circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "star-circle.png"; sourceTree = "<group>"; };
 		F29F54B322427BD000CCC0B8 /* Fireflies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fireflies.swift; sourceTree = "<group>"; };
 		F29F54B522427DD300CCC0B8 /* firefly.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = firefly.png; sourceTree = "<group>"; };
-		F29F54B722429EEC00CCC0B8 /* Sky.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sky.swift; sourceTree = "<group>"; };
-		F29F54BB22430D2900CCC0B8 /* CornstalkImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornstalkImageView.swift; sourceTree = "<group>"; };
+		F29F54B722429EEC00CCC0B8 /* Stars.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stars.swift; sourceTree = "<group>"; };
+		F29F54BB22430D2900CCC0B8 /* Cornstalk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cornstalk.swift; sourceTree = "<group>"; };
 		F29F54BE22431B5900CCC0B8 /* cs9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cs9.png; sourceTree = "<group>"; };
 		F29F54BF22431B5900CCC0B8 /* cs2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cs2.png; sourceTree = "<group>"; };
 		F29F54C022431B5900CCC0B8 /* cs8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cs8.png; sourceTree = "<group>"; };
@@ -58,8 +61,11 @@
 		F29F54C722431B5900CCC0B8 /* cs3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cs3.png; sourceTree = "<group>"; };
 		F29F54C822431B5900CCC0B8 /* cs11.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cs11.png; sourceTree = "<group>"; };
 		F29F54D422431BFD00CCC0B8 /* Cornfield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cornfield.swift; sourceTree = "<group>"; };
-		F29F54D82243DEAB00CCC0B8 /* MoonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoonView.swift; sourceTree = "<group>"; };
+		F29F54D82243DEAB00CCC0B8 /* Moon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Moon.swift; sourceTree = "<group>"; };
 		F29F560D2244766F00CCC0B8 /* moon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = moon.png; path = ../../../../../../../Desktop/moon.png; sourceTree = "<group>"; };
+		F29F560F2247FF0C00CCC0B8 /* Sky.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sky.swift; sourceTree = "<group>"; };
+		F29F56112247FF5800CCC0B8 /* Meteor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meteor.swift; sourceTree = "<group>"; };
+		F29F56132247FF8300CCC0B8 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,11 +100,14 @@
 			children = (
 				F21C7A5F223C4C4100037120 /* AppDelegate.swift */,
 				F21C7A61223C4C4100037120 /* ViewController.swift */,
+				F29F56132247FF8300CCC0B8 /* Extensions.swift */,
 				F29F54D422431BFD00CCC0B8 /* Cornfield.swift */,
-				F29F54D82243DEAB00CCC0B8 /* MoonView.swift */,
-				F29F54BB22430D2900CCC0B8 /* CornstalkImageView.swift */,
+				F29F56112247FF5800CCC0B8 /* Meteor.swift */,
+				F29F54D82243DEAB00CCC0B8 /* Moon.swift */,
+				F29F54BB22430D2900CCC0B8 /* Cornstalk.swift */,
 				F29F54B322427BD000CCC0B8 /* Fireflies.swift */,
-				F29F54B722429EEC00CCC0B8 /* Sky.swift */,
+				F29F54B722429EEC00CCC0B8 /* Stars.swift */,
+				F29F560F2247FF0C00CCC0B8 /* Sky.swift */,
 				F29F54BD22431B4D00CCC0B8 /* cornstalks */,
 				F23FB6092241516700CBC3B5 /* star-circle.png */,
 				F29F54B522427DD300CCC0B8 /* firefly.png */,
@@ -214,13 +223,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F29F54D92243DEAB00CCC0B8 /* MoonView.swift in Sources */,
+				F29F54D92243DEAB00CCC0B8 /* Moon.swift in Sources */,
 				F21C7A62223C4C4100037120 /* ViewController.swift in Sources */,
+				F29F56122247FF5800CCC0B8 /* Meteor.swift in Sources */,
 				F21C7A60223C4C4100037120 /* AppDelegate.swift in Sources */,
-				F29F54BC22430D2900CCC0B8 /* CornstalkImageView.swift in Sources */,
+				F29F56102247FF0C00CCC0B8 /* Sky.swift in Sources */,
+				F29F56142247FF8300CCC0B8 /* Extensions.swift in Sources */,
+				F29F54BC22430D2900CCC0B8 /* Cornstalk.swift in Sources */,
 				F29F54B422427BD000CCC0B8 /* Fireflies.swift in Sources */,
 				F29F54D522431BFD00CCC0B8 /* Cornfield.swift in Sources */,
-				F29F54B822429EEC00CCC0B8 /* Sky.swift in Sources */,
+				F29F54B822429EEC00CCC0B8 /* Stars.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

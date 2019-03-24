@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  DakotaViewController.swift
 //  wwdc-2019
 //
 //  Created by Dominic Holmes on 3/15/19.
@@ -7,15 +7,30 @@
 //
 
 import UIKit
-//import AVFoundation
-//import MediaPlayer.MPVolumeView
 
-class ViewController: UIViewController {
+class DakotaViewController: UIViewController {
     
+    // UIDynamics
+    var animator: UIDynamicAnimator!
+    var gravity: UIGravityBehavior!
+    var collision: UICollisionBehavior!
+    
+    // Notifications
+    let notificationCenter = NotificationCenter.default
+    var isPanGestureActive: Bool = false
+    
+    // Haptic Feedback Engines
+    let hapticImpact = UIImpactFeedbackGenerator()
+    let hapticNotification = UINotificationFeedbackGenerator()
+    
+    // Skybox
     var skyView: UIView!
     var meteorView: UIView!
     var skyGradient: CAGradientLayer!
+    
+    // Stars
     var constellationLayer: CAEmitterLayer!
+    var wwdcLayer: CALayer!
     
     // Moon
     var moonView: MoonImageView!
@@ -26,44 +41,27 @@ class ViewController: UIViewController {
     var moonRopeFrame: CGRect?
     var moonRopeView: UIView? = nil
     
+    // Fireflies
     var firefliesLayers: (CAEmitterLayer, CAEmitterLayer)!
-    var wwdcLayer: CALayer!
     
-    // Meteor animations repeat every 10 seconds
-    // They are visible if the bool is true
-    // The frequency multiplier changes with the system volume
-    //var meteorLoop: (Bool, Float) = (true, 0.0)
-    // TODO: change this
+    // Meteor
     var meteorLoop: (Bool, Float) = (true, 0.5)
     var meteorTimer: Timer?
-    
-    // UIDynamics
-    var animator: UIDynamicAnimator!
-    var gravity: UIGravityBehavior!
-    var collision: UICollisionBehavior!
     
     // Corn
     var cornstalks: [CornstalkImageView]!
     var cornstalkSnapBehaviors: [CornstalkSnapBehavior]!
     
-    var isPanGestureActive: Bool = false
-    
-    // Notifications
-    let notificationCenter = NotificationCenter.default
-    
-    // Haptic Feedback Engines
-    let hapticImpact = UIImpactFeedbackGenerator()
-    let hapticNotification = UINotificationFeedbackGenerator()
-    
     override func loadView() {
         let view = UIView()
         view.backgroundColor = .black
         
-        let label = UILabel()
+        /*let label = UILabel()
         label.frame = CGRect(x: 150, y: 200, width: 50, height: 20)
         label.text = ""
         label.textColor = .white
-        view.addSubview(label)
+        view.addSubview(label)*/
+        
         self.view = view
         
     }
@@ -93,20 +91,9 @@ class ViewController: UIViewController {
         wwdcLayer.opacity = 0.0
         skyView.layer.addSublayer(wwdcLayer)
         
-        // Begin skybox rotation
-        //rotateStars()
-        
         // Create fireflies
         firefliesLayers = (createFirefliesLayer(), createFirefliesLayer())
         view.layer.addSublayer(firefliesLayers.0)
-
-        
-        // Button for testing
-        /*let button = UIButton(frame: CGRect(x: 20, y: 40, width: 50, height: 50))
-        button.sendActions(for: UIControl.Event.touchUpInside)
-        button.addTarget(self, action: #selector(moveMoon), for: .touchUpInside)
-        button.backgroundColor = UIColor.darkGray
-        view.addSubview(button)*/
         
         // UIDynamics
         animator = UIDynamicAnimator(referenceView: view)
@@ -132,66 +119,33 @@ class ViewController: UIViewController {
         // Add fireflies on top of corn
         view.layer.addSublayer(firefliesLayers.1)
         
-        // Add pan gesture for manipulating the stars
+        // Add pan gesture for manipulating the stars + rope cut
         let panGesture = UIPanGestureRecognizer(target: self, action:(#selector(self.handlePanGesture(_:))))
         self.view.addGestureRecognizer(panGesture)
         
+        // Add double tap gesture for moving the moon
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(moveMoon(_:)))
         doubleTap.numberOfTapsRequired = 2
         view.addGestureRecognizer(doubleTap)
         
+        // Add tap gesture to detect moon pulse + rope cut
         let tap = UITapGestureRecognizer(target: self, action: #selector(pulseMoons(_:)))
         tap.numberOfTapsRequired = 1
         view.addGestureRecognizer(tap)
         
-        //let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(swipeMoonRope(_:)))
-        //view.addGestureRecognizer(swipeGesture)
-        
         // Add parralax effect to skyView
         addParallaxToView(vw: skyView)
-    }
-    
-    // MARK: - Moon
-    func createMoon() -> MoonImageView {
-        
-        let moonTopOffset: CGFloat = 190.0
-        let radius = view.bounds.height
-        let moonOrigin = CGPoint(x: view.center.x + radius, y: view.bounds.maxY + moonTopOffset)
-        let moon = MoonImageView(frame: CGRect(x: moonOrigin.x, y: moonOrigin.y, width: 180, height: 180))
-        moon.orbitInfo = MoonImageView.Orbit(center: CGPoint(x: view.center.x, y: moonOrigin.y), origin: moonOrigin, radius: view.bounds.height, position: 3, totalPositions: 7)
-        
-        return moon
-    }
-    
-    @objc func moveMoon(_ gestureRecognizer : UITapGestureRecognizer) {
-        if moonView.frame.contains(gestureRecognizer.location(in: view)) {
-            moveMoon()
-        }
-    }
-    
-    func moveMoon() {
-        guard !moonView.animationInProgress, let orbit = moonView.orbitInfo, orbit.position < orbit.totalPositions else { return }
-        moonView.increasePosition()
-        hapticNotification.notificationOccurred(.success)
-        
-        if orbit.position == orbit.totalPositions - 1 {
-            Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { (timer) in
-                print("FADE IN WWDC")
-                self.fadeInWWDCLayer()
-                self.addRope()
-            }
-        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         // Start listening to volume change events
-        notificationCenter.addObserver(self,
+        /*notificationCenter.addObserver(self,
                                        selector: #selector(systemVolumeDidChange),
                                        name: NSNotification.Name(rawValue: "AVSystemController_SystemVolumeDidChangeNotification"),
                                        object: nil
-        )
+        )*/
         
         meteorTimer = Timer.scheduledTimer(timeInterval: 4, target: self, selector: #selector(spawnMeteors), userInfo: nil, repeats: true)
         
@@ -210,297 +164,13 @@ class ViewController: UIViewController {
         meteorTimer?.invalidate()
     }
     
-    func addParallaxToView(vw: UIView) {
-        let amount = 100
-        
-        let horizontal = UIInterpolatingMotionEffect(keyPath: "center.x", type: .tiltAlongHorizontalAxis)
-        horizontal.minimumRelativeValue = -amount
-        horizontal.maximumRelativeValue = amount
-        
-        let vertical = UIInterpolatingMotionEffect(keyPath: "center.y", type: .tiltAlongVerticalAxis)
-        vertical.minimumRelativeValue = -amount
-        vertical.maximumRelativeValue = amount
-        
-        let group = UIMotionEffectGroup()
-        group.motionEffects = [horizontal, vertical]
-        vw.addMotionEffect(group)
-    }
-    
     // Triggered when the volume is changed
-    @objc func systemVolumeDidChange(notification: NSNotification) {
+    /*@objc func systemVolumeDidChange(notification: NSNotification) {
         print(notification.userInfo?["AVSystemController_AudioVolumeNotificationParameter"] as? Float as Any)
         if let newVolume = notification.userInfo?["AVSystemController_AudioVolumeNotificationParameter"] as? Float {
             meteorLoop.1 = newVolume
             meteorLoop.0 = (newVolume > 0)
         }
-    }
-    
-    func createSkyView() -> UIView {
-        return UIView(frame: view.bounds)
-    }
-    
-    func createSkyGradient() -> CAGradientLayer {
-        let gradient = CAGradientLayer()
-        gradient.frame = view.bounds
-        gradient.colors = [UIColor(rgb: 0x000428, a: 1.0).cgColor, // dark blue
-            UIColor(rgb: 0x004E92, a: 1.0).cgColor] // light blue
-        gradient.startPoint = CGPoint(x: 0, y: 0)
-        gradient.endPoint = CGPoint(x: 0, y: 1)
-        return gradient
-    }
-    
-    // MARK: - Constellation
-    func createConstellationLayer() -> CAEmitterLayer {
-        let emitter = CAEmitterLayer()
-        emitter.emitterPosition = CGPoint(x: view.center.x, y: view.center.y)
-        emitter.emitterShape = .rectangle
-        emitter.emitterSize = CGSize(width: view.frame.size.width * 2, height: view.frame.size.height * 2)
-        let cell = CAEmitterCell()
-        cell.lifetime = 2000.0
-        cell.scale = 0.1
-        cell.scaleRange = 0.09
-        cell.contents = UIImage(named: "star-circle.png")!.cgImage
-        cell.birthRate = 1
-        emitter.emitterCells = [cell]
-        return emitter
-    }
-    
-    func fadeInConstellationLayer() {
-        let fadeInAnimation = CABasicAnimation(keyPath: "opacity")
-        fadeInAnimation.fromValue = 0.0
-        fadeInAnimation.toValue = 1.0
-        fadeInAnimation.duration = 2.0
-        constellationLayer.add(fadeInAnimation, forKey: nil)
-    }
-    
-    func fadeInWWDCLayer() {
-        let fadeInAnimation = CABasicAnimation(keyPath: "opacity")
-        fadeInAnimation.fromValue = 0.0
-        fadeInAnimation.toValue = 1.0
-        fadeInAnimation.duration = 2.0
-        wwdcLayer.opacity = 1.0
-        wwdcLayer.add(fadeInAnimation, forKey: nil)
-    }
-    
-    @objc func rotateStars() {
-        let rotateAnimation = CABasicAnimation(keyPath: "transform.rotation")
-        rotateAnimation.fromValue = 0.0
-        rotateAnimation.toValue = -CGFloat(.pi * 2.0)
-        rotateAnimation.duration = 300.0
-        rotateAnimation.repeatCount = .greatestFiniteMagnitude
-        skyView.layer.add(rotateAnimation, forKey: "skyboxRotation")
-    }
-    
-    func mtnPoint(x: CGFloat, y: CGFloat) -> CGPoint {
-        let ratio = self.view.bounds.width / 2152.0
-        return CGPoint(x: x * ratio, y: y * ratio)
-    }
-    
-    func createCornfield() {
-        let imageView = UIImageView(frame: CGRect(x: 0, y: view.bounds.height - 310, width: view.bounds.width, height: 320))
-        imageView.contentMode = .topLeft
-        imageView.image = UIImage(named: "")
-        view.addSubview(imageView)
-    }
-    
-    // MARK: - Mountain
-    func createMountain() {
-        
-        let ratio = self.view.bounds.width / 2152.0
-        print(ratio)
-        
-        // Base mountain
-        let bezierPath = UIBezierPath()
-        bezierPath.move(to: mtnPoint(x: 0, y: 1154.2))
-        bezierPath.addCurve(to: mtnPoint(x: 505.49, y: 996.47), controlPoint1: mtnPoint(x: 0, y: 1154.2), controlPoint2: mtnPoint(x: 412.74, y: 1028.94))
-        bezierPath.addCurve(to: mtnPoint(x: 877.65, y: 842.21), controlPoint1: mtnPoint(x: 598.24, y: 963.99), controlPoint2: mtnPoint(x: 877.65, y: 842.21))
-        bezierPath.addCurve(to: mtnPoint(x: 995.9, y: 823.66), controlPoint1: mtnPoint(x: 877.65, y: 842.21), controlPoint2: mtnPoint(x: 947.21, y: 812.06))
-        bezierPath.addCurve(to: mtnPoint(x: 1138.51, y: 842.21), controlPoint1: mtnPoint(x: 1044.6, y: 835.25), controlPoint2: mtnPoint(x: 1138.51, y: 842.21))
-        bezierPath.addCurve(to: mtnPoint(x: 1303.14, y: 842.21), controlPoint1: mtnPoint(x: 1138.51, y: 842.21), controlPoint2: mtnPoint(x: 1276.47, y: 845.69))
-        bezierPath.addCurve(to: mtnPoint(x: 1623.13, y: 983.71), controlPoint1: mtnPoint(x: 1329.8, y: 838.73), controlPoint2: mtnPoint(x: 1400.53, y: 896.72))
-        bezierPath.addCurve(to: mtnPoint(x: 2152.96, y: 1178.56), controlPoint1: mtnPoint(x: 1845.73, y: 1070.7), controlPoint2: mtnPoint(x: 2152.96, y: 1178.56))
-        bezierPath.addLine(to: mtnPoint(x: 2226, y: 1202.91))
-        bezierPath.addLine(to: mtnPoint(x: 2226, y: 1668))
-        bezierPath.addLine(to: mtnPoint(x: 0, y: 1668))
-        bezierPath.addLine(to: mtnPoint(x: 0, y: 1154.2))
-        bezierPath.close()
-        
-        let mountainBase = CAShapeLayer()
-        mountainBase.frame = view.bounds
-        mountainBase.path = bezierPath.cgPath
-        mountainBase.fillColor = UIColor.white.cgColor
-        
-        // Shadow part of the mountain
-        let bezier2Path = UIBezierPath()
-        bezier2Path.move(to: mtnPoint(x: 511.81, y: 996.12))
-        bezier2Path.addCurve(to: mtnPoint(x: 887.89, y: 840.41), controlPoint1: mtnPoint(x: 605.54, y: 963.34), controlPoint2: mtnPoint(x: 887.89, y: 840.41))
-        bezier2Path.addCurve(to: mtnPoint(x: 1007.39, y: 821.68), controlPoint1: mtnPoint(x: 887.89, y: 840.41), controlPoint2: mtnPoint(x: 958.19, y: 809.97))
-        bezier2Path.addCurve(to: mtnPoint(x: 1145, y: 840), controlPoint1: mtnPoint(x: 1056.6, y: 833.39), controlPoint2: mtnPoint(x: 1145, y: 840))
-        bezier2Path.addLine(to: mtnPoint(x: 1307, y: 842))
-        bezier2Path.addCurve(to: mtnPoint(x: 1299.12, y: 852.12), controlPoint1: mtnPoint(x: 1307, y: 842), controlPoint2: mtnPoint(x: 1313.18, y: 846.27))
-        bezier2Path.addCurve(to: mtnPoint(x: 1221.79, y: 879.05), controlPoint1: mtnPoint(x: 1285.06, y: 857.97), controlPoint2: mtnPoint(x: 1227.65, y: 879.05))
-        bezier2Path.addCurve(to: mtnPoint(x: 1123.38, y: 894.27), controlPoint1: mtnPoint(x: 1215.93, y: 879.05), controlPoint2: mtnPoint(x: 1199.53, y: 888.41))
-        bezier2Path.addCurve(to: mtnPoint(x: 1056.6, y: 897.78), controlPoint1: mtnPoint(x: 1047.23, y: 900.12), controlPoint2: mtnPoint(x: 1070.66, y: 897.78))
-        bezier2Path.addCurve(to: mtnPoint(x: 1021.45, y: 903.63), controlPoint1: mtnPoint(x: 1042.54, y: 897.78), controlPoint2: mtnPoint(x: 1021.45, y: 897.78))
-        bezier2Path.addCurve(to: mtnPoint(x: 1137.44, y: 957.49), controlPoint1: mtnPoint(x: 1021.45, y: 909.49), controlPoint2: mtnPoint(x: 1053.08, y: 927.05))
-        bezier2Path.addCurve(to: mtnPoint(x: 1217.4, y: 988.06), controlPoint1: mtnPoint(x: 1167.23, y: 968.24), controlPoint2: mtnPoint(x: 1194.53, y: 978.84))
-        bezier2Path.addCurve(to: mtnPoint(x: 1286.23, y: 1017.19), controlPoint1: mtnPoint(x: 1259.27, y: 1004.95), controlPoint2: mtnPoint(x: 1286.23, y: 1017.19))
-        bezier2Path.addCurve(to: mtnPoint(x: 1370.58, y: 1061.68), controlPoint1: mtnPoint(x: 1286.23, y: 1017.19), controlPoint2: mtnPoint(x: 1349.5, y: 1046.46))
-        bezier2Path.addCurve(to: mtnPoint(x: 1417.45, y: 1113.19), controlPoint1: mtnPoint(x: 1391.67, y: 1076.9), controlPoint2: mtnPoint(x: 1417.45, y: 1102.66))
-        bezier2Path.addCurve(to: mtnPoint(x: 1360.04, y: 1164.71), controlPoint1: mtnPoint(x: 1417.45, y: 1123.73), controlPoint2: mtnPoint(x: 1433.85, y: 1151.83))
-        bezier2Path.addCurve(to: mtnPoint(x: 1167.9, y: 1164.71), controlPoint1: mtnPoint(x: 1286.23, y: 1177.58), controlPoint2: mtnPoint(x: 1235.85, y: 1168.22))
-        bezier2Path.addCurve(to: mtnPoint(x: 887.89, y: 1225.58), controlPoint1: mtnPoint(x: 1099.95, y: 1161.19), controlPoint2: mtnPoint(x: 958.19, y: 1171.73))
-        bezier2Path.addCurve(to: mtnPoint(x: 743.79, y: 1348.51), controlPoint1: mtnPoint(x: 817.6, y: 1279.44), controlPoint2: mtnPoint(x: 803.54, y: 1309.88))
-        bezier2Path.addCurve(to: mtnPoint(x: 569.22, y: 1416.41), controlPoint1: mtnPoint(x: 684.03, y: 1387.15), controlPoint2: mtnPoint(x: 569.22, y: 1416.41))
-        bezier2Path.addCurve(to: mtnPoint(x: 278.67, y: 1436.32), controlPoint1: mtnPoint(x: 569.22, y: 1416.41), controlPoint2: mtnPoint(x: 386.45, y: 1453.88))
-        bezier2Path.addCurve(to: mtnPoint(x: 1, y: 1416.41), controlPoint1: mtnPoint(x: 170.88, y: 1418.76), controlPoint2: mtnPoint(x: 1, y: 1416.41))
-        bezier2Path.addLine(to: mtnPoint(x: 1, y: 1155.34))
-        bezier2Path.addCurve(to: mtnPoint(x: 511.81, y: 996.12), controlPoint1: mtnPoint(x: 1, y: 1155.34), controlPoint2: mtnPoint(x: 418.08, y: 1028.9))
-        bezier2Path.close()
-        
-        let mountainShadow = CAShapeLayer()
-        mountainShadow.frame = view.bounds
-        mountainShadow.path = bezier2Path.cgPath
-        mountainShadow.fillColor = UIColor.lightGray.cgColor
-        
-        view.layer.addSublayer(mountainBase)
-        view.layer.addSublayer(mountainShadow)
-    }
-    
-    // MARK: - Meteor spawning logic
-    @objc func spawnMeteors() {
-        
-        guard meteorLoop.0 == true && meteorLoop.1 > 0 else { return }
-        
-        let widthOffset = view.bounds.width / 2.0
-        
-        for _ in 0 ... Int(2 * meteorLoop.1) {
-            
-            let timeOff = Double.random(in: 0.0 ... 4.0)
-            let radius = CGFloat.random(in: 150 ... 250)
-            let xoff = CGFloat.random(in: -widthOffset + radius ... widthOffset)
-            let yoff = CGFloat.random(in: radius + 20 ... radius + 150)
-            
-            let params = MeteorParams(radius: radius,
-                                      startAngleFuzz: CGFloat.random(in: -0.1...0.05),
-                                      endAngleFuzz: CGFloat.random(in: -0.05...0.1),
-                                      origin: CGPoint(x: view.center.x + xoff, y: yoff))
-            DispatchQueue.main.asyncAfter(deadline: .now() + timeOff) {
-                self.spawnMeteor(with: params)
-            }
-        }
-    }
-    
-    // MARK: - Meteor creation logic
-    struct MeteorParams {
-        let radius: CGFloat
-        let startAngleFuzz: CGFloat
-        let endAngleFuzz: CGFloat
-        let origin: CGPoint
-    }
-    
-    func spawnMeteor(with params: MeteorParams) {
-        let r: CGFloat = params.radius
-        let pi = CGFloat.pi
-        let origin = params.origin
-        
-        let startAngleMult = 1.4 + params.startAngleFuzz
-        let endAngleMult = 1.1 + params.endAngleFuzz
-        
-        let start = CGPoint(x: r + r * cos(startAngleMult * pi), y: r + r * sin(startAngleMult * pi))
-        let end = CGPoint(x: r + r * cos(endAngleMult * pi), y: r + r * sin(endAngleMult * pi))
-        
-        
-        let path = UIBezierPath()
-        path.move(to: start)
-        path.addArc(withCenter: CGPoint(x: r, y: r), radius: r, startAngle: startAngleMult * pi, endAngle: endAngleMult * pi, clockwise: false)
-        
-        let meteorMask = CAShapeLayer()
-        meteorMask.path = path.cgPath
-        meteorMask.frame = CGRect(x: 0, y: 0, width: r * 2, height: r * 2)
-        meteorMask.lineCap = .round
-        meteorMask.strokeColor = UIColor.white.cgColor
-        meteorMask.fillColor = UIColor.clear.cgColor
-        meteorMask.lineWidth = 1.0
-        meteorMask.strokeStart = 0.0
-        meteorMask.strokeEnd = 1.0
-        meteorMask.opacity = 0.0
-        
-        // Create and add the gradient layer
-        let meteorGradient = CAGradientLayer()
-        meteorGradient.frame = CGRect(x: origin.x - r, y: origin.y - r, width: r * 2, height: r * 2)
-        meteorGradient.colors = [UIColor.clear.cgColor, UIColor.white.cgColor]
-        
-        let gradientTail = CGPoint(x: start.x / r,
-                                   y: start.y / r)
-        let gradientHead = CGPoint(x: end.x / r,
-                                   y: end.y / r)
-        meteorGradient.startPoint = gradientTail
-        meteorGradient.endPoint = gradientHead
-        meteorGradient.locations = [0.0, 1.0]
-        meteorGradient.mask = meteorMask
-        
-        // Create stroke animations
-        let strokeStartAnimation = CABasicAnimation(
-            keyPath: "strokeStart")
-        strokeStartAnimation.fromValue = -0.5
-        strokeStartAnimation.toValue = 0.3
-        //strokeStartAnimation.duration = 0.7
-        strokeStartAnimation.duration = 1.2
-        
-        let strokeEndAnimation = CABasicAnimation(
-            keyPath: "strokeEnd")
-        strokeEndAnimation.fromValue = 0.0
-        strokeEndAnimation.toValue = 1.0
-        strokeEndAnimation.duration = 1.2
-        
-        let opacityAnimation = CAKeyframeAnimation(keyPath: "opacity")
-        opacityAnimation.values = [0.0, 1.0, 0.0]
-        opacityAnimation.keyTimes = [0.0, 0.5, 1.0]
-        opacityAnimation.duration = 1.2
-        
-        // Add the meteor gradient to the view
-        meteorView.layer.addSublayer(meteorGradient)
-        
-        // Animate the meteor mask
-        meteorMask.add(strokeStartAnimation, forKey: "meteorAnimation")
-        meteorMask.add(strokeEndAnimation, forKey: "meteorEndAnimation")
-        meteorMask.add(opacityAnimation, forKey: "meteorOpacityAnimation")
-    }
-}
-
-//extension MeteorViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
-//    // Get the Lux from camera buffer
-//    // Credit: https://stackoverflow.com/questions/22753165/detecting-if-iphone-is-in-a-dark-room/22836060#22836060
-//    func captureOutput(_ captureOutput: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-//        let metadataDict = CMCopyDictionaryOfAttachments(allocator: nil, target: sampleBuffer, attachmentMode: kCMAttachmentMode_ShouldPropagate)
-//        let metadata = metadataDict as? [AnyHashable : Any]
-//        let exifMetadata = (metadata![kCGImagePropertyExifDictionary as String]) as? [AnyHashable : Any]
-//        let brightnessValue: Float = (exifMetadata?[kCGImagePropertyExifBrightnessValue as String] as? NSNumber)?.floatValue ?? 0.0
-//        print(brightnessValue)
-//    }
-//}
-
-// MARK: - Extensions
-extension UIColor {
-    // Credit: https://stackoverflow.com/questions/24263007/how-to-use-hex-color-values/36009030#36009030
-    convenience init(red: Int, green: Int, blue: Int, a: CGFloat = 1.0) {
-        self.init(
-            red: CGFloat(red) / 255.0,
-            green: CGFloat(green) / 255.0,
-            blue: CGFloat(blue) / 255.0,
-            alpha: a
-        )
-    }
-    
-    // Credit: https://stackoverflow.com/questions/24263007/how-to-use-hex-color-values/36009030#36009030
-    convenience init(rgb: Int, a: CGFloat = 1.0) {
-        self.init(
-            red: (rgb >> 16) & 0xFF,
-            green: (rgb >> 8) & 0xFF,
-            blue: rgb & 0xFF,
-            a: a
-        )
-    }
+    }*/
 }
 

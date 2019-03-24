@@ -8,6 +8,10 @@
 
 import UIKit
 
+class CornstalkSnapBehavior: UISnapBehavior {
+    var origin = CGPoint(x: 0, y: 0)
+}
+
 class CornstalkImageView: UIImageView {
     
     static let imageNames = ["cs1", "cs2", "cs3", "cs4", "cs5", "cs6", "cs7", "cs8", "cs9", "cs10", "cs11"]

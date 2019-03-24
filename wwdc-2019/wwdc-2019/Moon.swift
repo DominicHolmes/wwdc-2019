@@ -71,7 +71,41 @@ class MoonImageView: UIImageView, CAAnimationDelegate {
     }
 }
 
-extension ViewController {
+extension DakotaViewController {
+    
+    // MARK: - Moon
+    func createMoon() -> MoonImageView {
+        
+        let moonTopOffset: CGFloat = 190.0
+        let radius = view.bounds.height
+        let moonOrigin = CGPoint(x: view.center.x + radius, y: view.bounds.maxY + moonTopOffset)
+        let moon = MoonImageView(frame: CGRect(x: moonOrigin.x, y: moonOrigin.y, width: 180, height: 180))
+        moon.orbitInfo = MoonImageView.Orbit(center: CGPoint(x: view.center.x, y: moonOrigin.y), origin: moonOrigin, radius: view.bounds.height, position: 3, totalPositions: 7)
+        
+        return moon
+    }
+    
+    @objc func moveMoon(_ gestureRecognizer : UITapGestureRecognizer) {
+        if moonView.frame.contains(gestureRecognizer.location(in: view)) {
+            moveMoon()
+        }
+    }
+    
+    func moveMoon() {
+        guard !moonView.animationInProgress, let orbit = moonView.orbitInfo, orbit.position < orbit.totalPositions else { return }
+        moonView.increasePosition()
+        hapticNotification.notificationOccurred(.success)
+        
+        if orbit.position == orbit.totalPositions - 1 {
+            Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { (timer) in
+                print("FADE IN WWDC")
+                self.fadeInWWDCLayer()
+                self.addRope()
+            }
+        }
+    }
+    
+    // Add the rope that ties the moon to the top of the screen
     func addRope() {
         
         moonView.image = UIImage(named: "moon")
@@ -90,7 +124,6 @@ extension ViewController {
         UIView.animate(withDuration: 1.0) {
             self.moonRopeView?.alpha = 1.0
         }
-
         
         // Anchor point
         let ropeAnchor = CGPoint(x: newMoon.center.x, y: newMoon.center.y - (newMoon.bounds.height / 2))
@@ -140,7 +173,7 @@ extension ViewController {
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 10.0, execute: {
-            Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true, block: { _ in
+            Timer.scheduledTimer(withTimeInterval: 4.0, repeats: true, block: { _ in
                 if (self.moonBalls?.count ?? 0) < 20 {
                     self.spawnRandomMoon()
                 }
@@ -178,8 +211,8 @@ extension ViewController {
         if let moons = moonBalls, moonRopeFrame == nil {
             for moon in moons {
                 let push = UIPushBehavior(items: [moon], mode: .instantaneous)
-                push.angle = CGFloat.random(in: 0 ... CGFloat.pi * 2 )
-                push.magnitude = CGFloat.random(in: 50 ... 150)
+                push.angle = CGFloat.random(in: -0.5 ... CGFloat.pi + 0.5)
+                push.magnitude = CGFloat.random(in: 50 ... 100)
                 animator.addBehavior(push)
             }
         }
