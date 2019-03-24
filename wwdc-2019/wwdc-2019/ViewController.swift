@@ -124,9 +124,9 @@ class DakotaViewController: UIViewController {
         self.view.addGestureRecognizer(panGesture)
         
         // Add double tap gesture for moving the moon
-        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(moveMoon(_:)))
-        doubleTap.numberOfTapsRequired = 2
-        view.addGestureRecognizer(doubleTap)
+        let moonTap = UITapGestureRecognizer(target: self, action: #selector(moveMoon(_:)))
+        moonTap.numberOfTapsRequired = 2
+        view.addGestureRecognizer(moonTap)
         
         // Add tap gesture to detect moon pulse + rope cut
         let tap = UITapGestureRecognizer(target: self, action: #selector(pulseMoons(_:)))

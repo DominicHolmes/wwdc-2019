@@ -14,7 +14,7 @@ class CornstalkSnapBehavior: UISnapBehavior {
 
 class CornstalkImageView: UIImageView {
     
-    static let imageNames = ["cs1", "cs2", "cs3", "cs4", "cs5", "cs6", "cs7", "cs8", "cs9", "cs10", "cs11"]
+    static let imageNames = ["cs2", "cs3", "cs4", "cs5", "cs6", "cs7", "cs8", "cs9", "cs10", "cs11"]
     
     override init(frame: CGRect) {
         super.init(frame: frame)
