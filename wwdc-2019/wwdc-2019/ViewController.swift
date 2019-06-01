@@ -128,6 +128,10 @@ class DakotaViewController: UIViewController {
         moonTap.numberOfTapsRequired = 2
         view.addGestureRecognizer(moonTap)
         
+        let skyMoonPress = UILongPressGestureRecognizer(target: self, action: #selector(moveMoon(_:)))
+        skyMoonPress.minimumPressDuration = 2
+        skyView.addGestureRecognizer(skyMoonPress)
+        
         // Add tap gesture to detect moon pulse + rope cut
         let tap = UITapGestureRecognizer(target: self, action: #selector(pulseMoons(_:)))
         tap.numberOfTapsRequired = 1
