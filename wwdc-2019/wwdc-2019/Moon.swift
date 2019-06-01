@@ -39,8 +39,16 @@ class MoonImageView: UIImageView, CAAnimationDelegate {
     func increasePosition() {
         guard let orbit = orbitInfo, animationInProgress == false else { return }
         animationInProgress = true
-        addAnimation(to: orbit.position + 1, from: orbit.position, of: orbit.totalPositions)
-        self.orbitInfo?.position += 1
+        
+        print("Orbit position: \(orbit.position) ||| Of total: \(orbit.totalPositions)")
+        
+        if orbit.position < 6 {
+            addAnimation(to: 6, from: orbit.position, of: orbit.totalPositions)
+            self.orbitInfo?.position = 6
+        } else {
+            addAnimation(to: orbit.position + 1, from: orbit.position, of: orbit.totalPositions)
+            self.orbitInfo?.position += 1
+        }
     }
     
     func addAnimation(to position: Int, from pastPosition: Int, of totalPositions: Int) {
@@ -86,9 +94,7 @@ extension DakotaViewController {
     }
     
     @objc func moveMoon(_ gestureRecognizer : UITapGestureRecognizer) {
-        if moonView.frame.contains(gestureRecognizer.location(in: view)) {
-            moveMoon()
-        }
+        moveMoon()
     }
     
     func moveMoon() {
@@ -98,7 +104,6 @@ extension DakotaViewController {
         
         if orbit.position == orbit.totalPositions - 1 {
             Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { (timer) in
-                print("FADE IN WWDC")
                 self.fadeInWWDCLayer()
                 self.addRope()
             }

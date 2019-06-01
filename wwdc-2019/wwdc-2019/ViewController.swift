@@ -153,8 +153,10 @@ class DakotaViewController: UIViewController {
         
         meteorTimer = Timer.scheduledTimer(timeInterval: 4, target: self, selector: #selector(spawnMeteors), userInfo: nil, repeats: true)
         
-        Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { (timer) in
-            self.moveMoon()
+        Timer.scheduledTimer(withTimeInterval: 10.0, repeats: false) { (timer) in
+            if (self.moonView.orbitInfo?.position ?? 0) < 6 {
+                self.moveMoon()
+            }
         }
     }
     

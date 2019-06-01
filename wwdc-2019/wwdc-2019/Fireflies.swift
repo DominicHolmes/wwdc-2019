@@ -47,7 +47,7 @@ extension DakotaViewController {
     
     // Create WWDC stars layer by getting a path from the glyphs of CTFont characters
     func createWWDC() -> CALayer {
-        let font = UIFont(name: "AvenirNext-DemiBold", size: 200)!
+        let font = UIFont(name: "AvenirNext-DemiBold", size: 100)!
         
         var chars = [UniChar]("WWDC".utf16)
         var glyphs = [CGGlyph](repeating: 0, count: chars.count)
@@ -57,7 +57,7 @@ extension DakotaViewController {
             for eachGlyph in glyphs.indices {
                 let cgpath = CTFontCreatePathForGlyph(font, glyphs[eachGlyph], nil)!
                 let path = UIBezierPath(cgPath: cgpath)
-                let kerning = (eachGlyph == 3) ? (200.0 * CGFloat(eachGlyph)) - 50.0 : 200.0 * CGFloat(eachGlyph)
+                let kerning = (eachGlyph == 3) ? (100.0 * CGFloat(eachGlyph)) - 20.0 : 100.0 * CGFloat(eachGlyph)
                 path.apply(CGAffineTransform(translationX: kerning, y: 0.0))
                 path.close()
                 path.fill()

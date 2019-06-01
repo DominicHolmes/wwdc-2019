@@ -53,7 +53,7 @@ extension DakotaViewController {
     }
     
     func addParallaxToView(vw: UIView) {
-        let amount = 100
+        let amount = 60
         
         let horizontal = UIInterpolatingMotionEffect(keyPath: "center.x", type: .tiltAlongHorizontalAxis)
         horizontal.minimumRelativeValue = -amount
